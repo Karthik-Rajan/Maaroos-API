@@ -1,0 +1,33 @@
+{
+  "name": "maaroos-world",
+  "version": "0.2.0",
+  "bin": {
+    "cdk": "bin/cdk.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.103",
+    "@types/jest": "^26.0.10",
+    "@types/node": "^16.11.41",
+    "aws-cdk": "2.10.0",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-apigateway": "^1.159.0",
+    "@aws-cdk/aws-cloudfront": "^1.171.0",
+    "@aws-cdk/aws-dynamodb": "^1.172.0",
+    "@aws-cdk/aws-s3": "^1.171.0",
+    "@aws-cdk/aws-s3-deployment": "^1.171.0",
+    "@aws-sdk/client-dynamodb": "^3.168.0",
+    "@aws-sdk/util-dynamodb": "^3.168.0",
+    "aws-lambda": "^1.0.7",
+    "esbuild": "^0.15.7",
+    "react-google-autocomplete": "^2.7.0",
+    "source-map-support": "^0.5.16"
+  }
+}
