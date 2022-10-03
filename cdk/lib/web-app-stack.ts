@@ -9,15 +9,15 @@ export class WebAppStack extends cdk.Stack {
     super(scope, id, props);
 
     // S3
-    const bucket = new s3.Bucket(this, "maaroosworld.com", {
+    const bucket = new s3.Bucket(this, "maaroosworldweb.com", {
       publicReadAccess: true,
-      bucketName: "maaroos-world",
+      bucketName: "maaroos-world-web",
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       websiteIndexDocument: "index.html",
     });
 
     // Deployment
-    const src = new s3Deploy.BucketDeployment(this, "Maaroos-Deploy", {
+    const src = new s3Deploy.BucketDeployment(this, "Maaroos-Web-Deploy", {
       sources: [s3Deploy.Source.asset("../build")],
       destinationBucket: bucket,
     });
