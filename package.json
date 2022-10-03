@@ -1,8 +1,10 @@
 {
-  "name": "my-app",
+  "name": "maaroos-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -10,11 +12,23 @@
     "@types/node": "^16.11.62",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
+    "@types/react-router-dom": "^5.3.3",
+    "awesome-typescript-loader": "^5.2.1",
+    "bootstrap": "^4.3.1",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.4.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
+    "react-bootstrap": "^1.0.0-beta.9",
+    "react-dom": "^16.8.6",
+    "react-icofont": "0.0.6",
+    "react-owl-carousel3": "^2.2.5",
+    "react-router-dom": "^6.4.1",
+    "react-scripts": "3.0.1",
+    "react-select2-wrapper": "^1.0.4-beta6",
+    "source-map-loader": "^4.0.0",
     "typescript": "^4.8.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webpack": "^4.29.6"
   },
   "scripts": {
     "start": "react-scripts start",
