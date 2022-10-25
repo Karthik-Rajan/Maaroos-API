@@ -78,7 +78,35 @@ function Header() {
               >
                 Home <span className="sr-only">(current)</span>
               </Nav.Link>
+
               <Nav.Link
+                eventKey={1}
+                as={NavLink}
+                activeclassname="active"
+                to="/listing"
+              >
+                Listing
+              </Nav.Link>
+
+              <Nav.Link
+                eventKey={2}
+                as={NavLink}
+                activeclassname="active"
+                to="/login"
+              >
+                Login
+              </Nav.Link>
+
+              <Nav.Link
+                eventKey={3}
+                as={NavLink}
+                activeclassname="active"
+                to="/register"
+              >
+                Register
+              </Nav.Link>
+
+              {/* <Nav.Link
                 eventKey={1}
                 as={NavLink}
                 activeclassname="active"
@@ -86,8 +114,8 @@ function Header() {
               >
                 <Icofont icon="sale-discount" /> Offers{" "}
                 <Badge variant="danger">New</Badge>
-              </Nav.Link>
-              <NavDropdown
+              </Nav.Link> */}
+              {/* <NavDropdown
                 id={`nav-0`}
                 title="Restaurants"
                 alignRight
@@ -117,8 +145,8 @@ function Header() {
                 >
                   Checkout
                 </NavDropdown.Item>
-              </NavDropdown>
-              <NavDropdown id={`nav-1`} title="Pages" alignRight>
+              </NavDropdown> */}
+              {/* <NavDropdown id={`nav-1`} title="Pages" alignRight>
                 <NavDropdown.Item
                   eventKey={3.1}
                   as={NavLink}
@@ -167,8 +195,8 @@ function Header() {
                 >
                   Extra
                 </NavDropdown.Item>
-              </NavDropdown>
-              <NavDropdown
+              </NavDropdown> */}
+              {/* <NavDropdown
                 id={`nav-2`}
                 alignRight
                 title={
@@ -299,7 +327,7 @@ function Header() {
                     </NavDropdown.Item>
                   </div>
                 </div>
-              </NavDropdown>
+              </NavDropdown> */}
             </Nav>
           </Navbar.Collapse>
         </Container>

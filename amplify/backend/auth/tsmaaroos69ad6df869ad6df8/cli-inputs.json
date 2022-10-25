@@ -1,0 +1,63 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "tsmaaroos69ad6df8_identitypool_69ad6df8",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "tsmaar69ad6df8",
+    "userPoolName": "tsmaaroos69ad6df8_userpool_69ad6df8",
+    "autoVerifiedAttributes": [
+      "phone_number"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+      "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+      "phone_number"
+    ],
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": false,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+      "phone_number"
+    ],
+    "userpoolClientReadAttributes": [
+      "phone_number"
+    ],
+    "userpoolClientLambdaRole": "tsmaar69ad6df8_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": true,
+    "sharedId": "69ad6df8",
+    "resourceName": "tsmaaroos69ad6df869ad6df8",
+    "authSelections": "identityPoolAndUserPool",
+    "useDefault": "manual",
+    "thirdPartyAuth": false,
+    "userPoolGroups": false,
+    "adminQueries": false,
+    "triggers": {
+      "CreateAuthChallenge": [
+        "boilerplate-create-challenge"
+      ],
+      "DefineAuthChallenge": [
+        "boilerplate-define-challenge"
+      ],
+      "PreSignup": [
+        "custom"
+      ],
+      "VerifyAuthChallengeResponse": [
+        "boilerplate-verify"
+      ]
+    },
+    "hostedUI": false,
+    "userPoolGroupList": [],
+    "serviceName": "Cognito",
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true
+  }
+}

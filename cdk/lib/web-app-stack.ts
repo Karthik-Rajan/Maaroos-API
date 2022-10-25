@@ -14,6 +14,7 @@ export class WebAppStack extends cdk.Stack {
       bucketName: "maaroos-world-web",
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       websiteIndexDocument: "index.html",
+      websiteErrorDocument: "index.html",
     });
 
     // Deployment
@@ -23,17 +24,30 @@ export class WebAppStack extends cdk.Stack {
     });
 
     // Cloudfront
-    // const cf = new cloudfront.CloudFrontWebDistribution(this, "MaaroosDistribution", {
-    //   originConfigs: [
-    //     {
-    //       s3OriginSource: {
-    //         s3BucketSource: bucket
-    //       },
-    //       behaviors: [{
-    //         isDefaultBehavior: true
-    //       }]
-    //     },
-    //   ]
-    // });
+    /*const cf = new cloudfront.CloudFrontWebDistribution(
+      this,
+      "MaaroosWebDist",
+      {
+        originConfigs: [
+          {
+            s3OriginSource: {
+              s3BucketSource: bucket,
+            },
+            behaviors: [
+              {
+                isDefaultBehavior: true,
+              },
+            ],
+          },
+        ],
+        errorConfigurations: [
+          {
+            errorCode: 404,
+            responseCode: 200,
+            responsePagePath: "/index.html",
+          },
+        ],
+      }
+    );*/
   }
 }

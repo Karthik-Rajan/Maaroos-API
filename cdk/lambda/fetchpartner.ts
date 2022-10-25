@@ -37,14 +37,16 @@ export async function handler(
     ),
   };
 
-  const run = (async function (params) {
+  const run = async function (params: any) {
     try {
       const resp = await dbClient.send(new GetItemCommand(params));
       results = unmarshall(resp.Item || {});
     } catch (err) {
       results = err;
     }
-  })(params);
+  };
+
+  run(params);
 
   return {
     body: JSON.stringify(results),

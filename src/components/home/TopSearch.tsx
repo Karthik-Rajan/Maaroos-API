@@ -1,11 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Row, Col, Container, Form } from "react-bootstrap";
-import Select2 from "react-select2-wrapper";
-import Icofont from "react-icofont";
-import OwlCarousel from "react-owl-carousel3";
-import ProductBox from "./ProductBox";
-
+import React, { useEffect } from "react";
+import { Row, Col, Container } from "react-bootstrap";
+import SearchBar from "../common/SearchBar";
 import CategoriesCarousel from "../common/CategoriesCarousel";
 
 function TopSearch() {
@@ -17,56 +12,15 @@ function TopSearch() {
           <Col md={10}>
             <div className="homepage-search-title">
               <h1 className="mb-2 font-weight-normal">
-                <span className="font-weight-bold">Find Awesome Deals</span> in
-                India
+                <span className="font-weight-bold">Find Best Food Proider</span>{" "}
+                in Your Local
               </h1>
               <h5 className="mb-5 text-secondary font-weight-normal">
                 Lists of top restaurants, cafes, pubs, and bars in Melbourne,
                 based on trends
               </h5>
             </div>
-            <div className="homepage-search-form">
-              <Form className="form-noborder">
-                <div className="form-row">
-                  <Form.Group className="col-lg-3 col-md-3 col-sm-12">
-                    <div className="location-dropdown">
-                      <Icofont icon="location-arrow" />
-                      <Select2
-                        className="custom-select"
-                        data={[
-                          { text: "Breakfast", id: 1 },
-                          { text: "Lunch", id: 2 },
-                          { text: "Dinner", id: 3 },
-                          { text: "Cafés", id: 4 },
-                          { text: "Delivery", id: 5 },
-                        ]}
-                        options={{
-                          placeholder: "Quick Searches",
-                        }}
-                      />
-                    </div>
-                  </Form.Group>
-                  <Form.Group className="col-lg-7 col-md-7 col-sm-12">
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter your delivery location"
-                      size="lg"
-                    />
-                    <Link className="locate-me" to="#">
-                      <Icofont icon="ui-pointer" /> Locate Me
-                    </Link>
-                  </Form.Group>
-                  <Form.Group className="col-lg-2 col-md-2 col-sm-12">
-                    <Link
-                      to="listing"
-                      className="btn btn-primary btn-block btn-lg btn-gradient"
-                    >
-                      Search
-                    </Link>
-                  </Form.Group>
-                </div>
-              </Form>
-            </div>
+            <SearchBar />
             <h6 className="mt-4 text-shadow font-weight-normal">
               E.g. Beverages, Pizzas, Chinese, Bakery, Indian...
             </h6>
