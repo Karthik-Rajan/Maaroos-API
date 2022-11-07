@@ -30,6 +30,7 @@
     "react-dom": "^18.2.0",
     "react-geocode": "^0.2.3",
     "react-google-autocomplete": "^2.7.0",
+    "react-hook-form": "^7.39.1",
     "react-icofont": "0.0.6",
     "react-owl-carousel3": "^2.2.5",
     "react-router-dom": "^6.4.1",

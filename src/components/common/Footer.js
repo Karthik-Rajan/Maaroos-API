@@ -181,8 +181,8 @@ class Footer extends React.Component {
 		      <footer className="pt-4 pb-4 text-center">
 		         <Container>
 		            <p className="mt-0 mb-0">{this.props.copyrightText}</p>
-		            <small className="mt-0 mb-0"> Made with <FontAwesome icon={this.props.madewithIconclassName} /> by
-		            <Link className="text-danger ml-1" target="_blank" to={`${this.props.firstLink}`}>{this.props.firstLinkText}</Link> - <Link className="text-primary" target="_blank" to={this.props.secondLink}>{this.props.secondLinkText}</Link>
+		            <small className="mt-0 mb-0"> Made In India <FontAwesome icon={this.props.madewithIconclassName} /> by
+		            <Link className="text-danger ml-1" target="_blank" to={`${this.props.firstLink}`}>{this.props.firstLinkText}</Link> <Link className="text-primary" target="_blank" to={this.props.secondLink}>{this.props.secondLinkText}</Link>
 		            </small>
 		         </Container>
 		      </footer>
@@ -212,12 +212,12 @@ Footer.defaultProps = {
 	popularCountries: [],
 	popularFHclassName:'mt-4 text-black',
 	popularFood: [],
-	copyrightText: '© Copyright 2020 Osahan Eat. All Rights Reserved',
+	copyrightText: '© Copyright 2022 Maaroos. All Rights Reserved',
 	madewithIconclassName: 'heart heart-icon text-danger',
-	firstLinkText: 'Gurdeep Osahan',
+	firstLinkText: '',
 	firstLink: "//www.instagram.com/iamgurdeeposahan/",
-	secondLinkText: 'Askbootstrap',
-	secondLink: '//askbootstrap.com/',
+	secondLinkText: 'Maaroos Team',
+	secondLink: 'https://www.maaroos.com',
 }
 
 

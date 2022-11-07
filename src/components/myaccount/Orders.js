@@ -1,9 +1,8 @@
 import React from 'react';
 import OrderCard from '../common/OrderCard';
 
-class Orders extends React.Component {
+const Orders = () => {
 
-	render() {
     	return (
     		<>
     		    <div className='p-4 bg-white shadow-sm'>
@@ -50,6 +49,5 @@ class Orders extends React.Component {
 			    </div>
 		    </>
     	);
-    }
 }
 export default Orders;

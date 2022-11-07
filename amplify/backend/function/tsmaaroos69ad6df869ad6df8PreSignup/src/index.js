@@ -2,7 +2,7 @@ exports.handler = (event, context, callback) => {
 
     try {
       // Confirm the user
-      event.response.autoConfirmUser = true;
+      //event.response.autoConfirmUser = true;
       console.log(event.request.userAttributes);
       // Set the email as verified if it is in the request
       if (event.request.userAttributes.hasOwnProperty('email')) {

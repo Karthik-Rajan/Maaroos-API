@@ -1,168 +1,348 @@
 import React, { useState, useEffect } from "react";
 import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Row, Col, Container, Form, Button } from "react-bootstrap";
 import FontAwesome from "./common/FontAwesome";
 import awsConfig from "../awsConfig";
+import LoginSlider from "../components/common/LoginSlider";
+
+import {
+  NOTSIGNIN,
+  SIGNEDIN,
+  OTPSENT,
+  NOUSER,
+  WRONGOTP,
+  USEREXISTS,
+  UNKNOWNERR,
+} from "../ErrorConstants";
 
 function Login() {
   Amplify.configure(awsConfig);
-  const NOTSIGNIN = "You are NOT logged in";
-  const SIGNEDIN = "You have logged in successfully";
-  const SIGNEDOUT = "You have logged out successfully";
-  const WAITINGFOROTP = "Enter OTP number";
-  const VERIFYNUMBER = "Verifying number (Country code +XX needed)";
 
-  const [message, setMessage] = useState("Welcome to Demo");
+  const [message, setMessage] = useState("");
   const [user, setUser] = useState(null);
   const [session, setSession] = useState(null);
   const [otp, setOtp] = useState("");
   const [number, setNumber] = useState("");
-  const password = Math.random().toString(10) + "Abc#";
+  const [password, setPassword] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
+  const [disabled, setDisabled] = useState(false);
+  const [info, setInfo] = useState("");
+
+  let navigate = useNavigate();
+
   useEffect(() => {
     verifyAuth();
   }, []);
   const verifyAuth = () => {
     Auth.currentAuthenticatedUser()
       .then((user) => {
-        setUser(user);
-        setMessage(SIGNEDIN);
-        setSession(null);
+        navigate("/");
       })
       .catch((err) => {
         console.error(err);
-        setMessage(NOTSIGNIN);
+        // setMessage(NOTSIGNIN);
       });
   };
-  const signOut = () => {
-    if (user) {
-      Auth.signOut();
-      setUser(null);
-      setOtp("");
-      setMessage(SIGNEDOUT);
-    } else {
-      setMessage(NOTSIGNIN);
-    }
-  };
+
   const signIn = () => {
-    setMessage(VERIFYNUMBER);
-    Auth.signIn(number)
+    Auth.signIn(number, password)
       .then((result) => {
         setSession(result);
-        setMessage(WAITINGFOROTP);
+        navigate("/");
       })
       .catch((e) => {
         if (e.code === "UserNotFoundException") {
-          signUp();
+          setMessage(NOUSER);
         } else if (e.code === "UsernameExistsException") {
-          setMessage(WAITINGFOROTP);
-          signIn();
+          setMessage(OTPSENT);
         } else {
-          console.log(e.code);
-          console.error(e);
+          setMessage(UNKNOWNERR);
         }
       });
   };
+
   const signUp = async () => {
+    setDisabled(true);
     const result = await Auth.signUp({
       username: number,
       password,
       attributes: {
         phone_number: number,
       },
-    }).then(() => signIn());
+    })
+      .then((res) => console.log(res))
+      .catch((e) => {
+        console.log(e);
+        setDisabled(false);
+        setInfo("");
+        if (e.code === "UserNotFoundException") {
+          setMessage(NOUSER);
+        } else if (e.code === "UsernameExistsException") {
+          setMessage(USEREXISTS);
+
+          //signIn();
+        } else {
+          setMessage(UNKNOWNERR);
+        }
+      });
     return result;
   };
+
+  const reset = () => {
+    setSession(null);
+    setInfo("");
+    setMessage("");
+    setDisabled(false);
+  };
+
   const verifyOtp = () => {
     Auth.sendCustomChallengeAnswer(session, otp)
       .then((user) => {
         setUser(user);
-        setMessage(SIGNEDIN);
         setSession(null);
+        navigate("/");
       })
       .catch((err) => {
-        setMessage(err.message);
+        setInfo("");
+        setMessage(WRONGOTP);
         setOtp("");
+      });
+  };
+
+  const reSend = () => {
+    Auth.resendSignUp(number)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
         console.log(err);
       });
   };
+
   return (
     <Container fluid className="bg-white">
       <Row>
-        <Col md={4} lg={6} className="d-none d-md-flex bg-image"></Col>
-        <Col md={8} lg={6}>
+        <Col md={4} lg={4.5} className="d-none d-md-flex bg-image">
+          <LoginSlider />
+        </Col>
+        <Col md={8} lg={6.5}>
           <div className="login d-flex align-items-center py-5">
-            <Container>
-              <Row>
-                <Col md={9} lg={8} className="mx-auto pl-5 pr-5">
-                  <h1 className="login-heading mb-4">Welcome back!</h1>
-                  <h6 className="mb-2">Good to see you again!!</h6>
-                  <br />
-                  <Form>
-                    <div className="form-label-group">
-                      <Form.Control
-                        type="phone"
-                        id="inputEmail"
-                        placeholder="Mobile Number"
-                      />
-                      <Form.Label htmlFor="inputEmail">
-                        Mobile Number
+            {isLogin ? (
+              <Container>
+                <Row>
+                  <Col md={9} lg={8} className="mx-auto pl-5 pr-5">
+                    <h1 className="login-heading mb-4">Welcome back!</h1>
+                    <h6 className="mb-2">Good to see you again!!</h6>
+                    <br />
+                    <Form>
+                      <Form.Label htmlFor="inputMobile">
+                        Mobile Number (eg : +919876543210)
                       </Form.Label>
-                    </div>
-                    {/* <div className="form-label-group">
-                      <Form.Control
-                        type="password"
-                        id="inputPassword"
-                        placeholder="Password"
-                      />
-                      <Form.Label htmlFor="inputPassword">Password</Form.Label>
-                    </div> */}
-                    {/* <Form.Check
-                      className="mb-3"
-                      custom
-                      type="checkbox"
-                      id="custom-checkbox"
-                      label="Remember password"
-                    /> */}
-                    <Link
-                      to=""
-                      className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
-                      onClick={signIn}
-                    >
-                      Send OTP
-                    </Link>
-                    <div className="text-center pt-3">
-                      Don’t have an account?{" "}
-                      <Link className="font-weight-bold" to="/register">
-                        Sign Up
+                      <div className="form-label-group">
+                        <Form.Control
+                          type="mobile"
+                          id="inputMobile"
+                          placeholder="Mobile Number"
+                          onChange={(event: any) => {
+                            setNumber(event.target.value);
+                          }}
+                        />
+                      </div>
+                      <Form.Label htmlFor="inputPassword">
+                        Password (Minimum 8 length)
+                      </Form.Label>
+                      <div className="form-label-group">
+                        <Form.Control
+                          type="password"
+                          id="inputPassword"
+                          placeholder="Password"
+                          onChange={(event: any) => {
+                            setPassword(event.target.value);
+                          }}
+                        />
+                      </div>
+
+                      <Link
+                        to=""
+                        className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
+                        onClick={signIn}
+                      >
+                        Sign In
                       </Link>
-                    </div>
-                    <hr className="my-4" />
-                    <p className="text-center">LOGIN WITH</p>
-                    <div className="row">
-                      <div className="col pr-2">
-                        <Button
-                          className="btn pl-1 pr-1 btn-lg btn-google font-weight-normal text-white btn-block text-uppercase"
-                          type="submit"
+                      <div className="text-center pt-3">
+                        Don’t have an account?{" "}
+                        <Link
+                          className="font-weight-bold"
+                          to=""
+                          onClick={() => {
+                            setIsLogin(false);
+                          }}
                         >
-                          <FontAwesome icon="google" className="mr-2" /> Google
-                        </Button>
+                          Sign Up
+                        </Link>
                       </div>
-                      <div className="col pl-2">
-                        <Button
-                          className="btn pl-1 pr-1 btn-lg btn-facebook font-weight-normal text-white btn-block text-uppercase"
-                          type="submit"
+                      {/* <hr className="my-4" />
+                      <p className="text-center">LOGIN WITH</p>
+                      <div className="row">
+                        <div className="col pr-2">
+                          <Button
+                            className="btn pl-1 pr-1 btn-lg btn-google font-weight-normal text-white btn-block text-uppercase"
+                            type="submit"
+                          >
+                            <FontAwesome icon="google" className="mr-2" />{" "}
+                            Google
+                          </Button>
+                        </div>
+                        <div className="col pl-2">
+                          <Button
+                            className="btn pl-1 pr-1 btn-lg btn-facebook font-weight-normal text-white btn-block text-uppercase"
+                            type="submit"
+                          >
+                            <FontAwesome icon="facebook" className="mr-2" />{" "}
+                            Facebook
+                          </Button>
+                        </div>
+                      </div> */}
+                    </Form>
+                  </Col>
+                </Row>
+              </Container>
+            ) : (
+              <Container>
+                <Row>
+                  <Col md={9} lg={8} className="mx-auto pl-5 pr-5">
+                    <h3 className="login-heading mb-4">Hey, New Buddy!</h3>
+                    <Form>
+                      {/* <PhoneInput
+                      countrySelectProps={{ unicodeFlags: true }}
+                      inputComponent={
+                        <Form.Control
+                          className={disabled ? "mobileDisabled" : ""}
+                          type="mobile"
+                          placeholder="Mobile Number"
+                          id="inputEmail"
+                          onChange={(event: any) =>
+                            setNumber(event.target.value)
+                          }
+                          readOnly={disabled}
+                        />
+                      }
+                      initialValueFormat="national"
+                      placeholder="Mobile Number"
+                      value={number}
+                      onChange={(event: any) => {}}
+                    /> */}
+                      <Form.Label
+                        className={disabled ? "mobileDisabled" : ""}
+                        htmlFor="inputEmail"
+                      >
+                        Mobile Number (eg : +919876543210)
+                      </Form.Label>
+                      <div className="form-label-group">
+                        <Form.Control
+                          className={disabled ? "mobileDisabled" : ""}
+                          type="mobile"
+                          placeholder="Mobile Number"
+                          id="inputEmail"
+                          onChange={(event: any) =>
+                            setNumber(event.target.value)
+                          }
+                          readOnly={disabled}
+                        />
+                      </div>
+                      <Form.Label htmlFor="inputPassword">
+                        Password (Minimum 8 length)
+                      </Form.Label>
+                      <div className="form-label-group">
+                        <Form.Control
+                          type="password"
+                          id="inputPassword"
+                          placeholder="Password"
+                          className="formInputSize"
+                          readOnly={disabled}
+                          onChange={(event: any) => {
+                            setPassword(event.target.value);
+                            if (event.target.value.length > 6) {
+                            }
+                          }}
+                        />
+                      </div>
+
+                      {session ? (
+                        <div className="form-label-group">
+                          <Form.Control
+                            type="text"
+                            id="inputOtp"
+                            placeholder="OTP"
+                            className="formInputSize"
+                            minLength={6}
+                            onChange={(event: any) => {
+                              setOtp(event.target.value);
+                            }}
+                          />
+                          <Form.Label htmlFor="inputOtp">
+                            OTP (6 Digits)
+                          </Form.Label>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <span id="signUpErr">{message}</span>
+                      <span id="signUpInfo">{info}</span>
+
+                      {!session ? (
+                        <Link
+                          to=""
+                          className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
+                          onClick={signUp}
                         >
-                          <FontAwesome icon="facebook" className="mr-2" />{" "}
-                          Facebook
-                        </Button>
+                          Send OTP
+                        </Link>
+                      ) : (
+                        <>
+                          <Link
+                            to=""
+                            className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
+                            onClick={verifyOtp}
+                          >
+                            Register
+                          </Link>
+                          <Link
+                            to=""
+                            className="btn btn-lg btn-info btn-block btn-login text-uppercase font-weight-bold mb-2"
+                            onClick={reset}
+                          >
+                            Reset
+                          </Link>
+                        </>
+                      )}
+                      {session ? (
+                        <Link className="" to="" onClick={reSend}>
+                          Resend OTP in 3 mins
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+
+                      <div className="text-center pt-3">
+                        Already have an account?{" "}
+                        <Link
+                          className="font-weight-bold"
+                          to=""
+                          onClick={() => {
+                            setIsLogin(true);
+                          }}
+                        >
+                          Sign In
+                        </Link>
                       </div>
-                    </div>
-                  </Form>
-                </Col>
-              </Row>
-            </Container>
+                    </Form>
+                  </Col>
+                </Row>
+              </Container>
+            )}
           </div>
         </Col>
       </Row>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import {
   Navbar,
@@ -7,106 +7,190 @@ import {
   NavDropdown,
   Image,
   Badge,
+  Alert,
 } from "react-bootstrap";
 import DropDownTitle from "./DropDownTitle";
 import CartDropdownHeader from "../cart/CartDropdownHeader";
 import CartDropdownItem from "../cart/CartDropdownItem";
 import Icofont from "react-icofont";
+import Amplify from "@aws-amplify/core";
+import Auth from "@aws-amplify/auth";
+import awsConfig from "../../awsConfig";
+import LoginModal from "../modals/LoginModal";
 
 function Header() {
+  Amplify.configure(awsConfig);
+  const [user, setUser] = useState(null);
+  const [notification, setNotification] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [isNavExpanded, setIsNavExpanded] = useState(false);
+
+  useEffect(() => {
+    Auth.currentUserInfo().then((res) => {
+      console.log(res);
+      setUser(res);
+    });
+  }, []);
 
   const onToggleHandler = () => {
     setIsNavExpanded(!isNavExpanded);
+  };
+
+  const signOut = () => {
+    if (user) {
+      Auth.signOut();
+      setUser(null);
+    } else {
+      alert("You are already logged out");
+    }
   };
 
   const onCloseMenu = () => {
     setIsNavExpanded(false);
   };
 
-  /*constructor(props) {
-	    super(props);
-	    this.state = {
-	      isNavExpanded: false
-	    };
-	}
-	
-    setIsNavExpanded = (isNavExpanded) => {
-      this.setState({ isNavExpanded: isNavExpanded });
-    }
-    closeMenu = () => {
-      this.setState({ isNavExpanded: false });
-    }
+  const showModal = () => {
+    setVisible(visible ? false : true);
+  };
 
-    handleClick = (e) => {
-      if (this.node.contains(e.target)) {
-        // if clicked inside menu do something
-      } else {
-        // If clicked outside menu, close the navbar.
-        this.setState({ isNavExpanded: false });
-      }
-    }
-  
-	componentDidMount() {
-	    document.addEventListener('click', this.handleClick, false);      
-	}
-
-	componentWillUnmount() {
-	    document.removeEventListener('click', this.handleClick, false);
-	}*/
   return (
-    <div ref={(node) => node}>
-      <Navbar
-        onToggle={onToggleHandler}
-        expanded={isNavExpanded}
-        color="light"
-        expand="lg"
-        className="navbar-light osahan-nav shadow-sm"
-      >
-        <Container>
-          <Navbar.Brand to="/">
-            <Image src="/img/logo.png" alt="Maaroos" className="logoImage" />
-          </Navbar.Brand>
-          <Navbar.Toggle />
-          <Navbar.Collapse id="navbarNavDropdown">
-            <Nav activeKey={0} className="ml-auto" onSelect={onCloseMenu}>
-              <Nav.Link
-                eventKey={0}
-                as={NavLink}
-                activeclassname="active"
-                to="/"
-              >
-                Home <span className="sr-only">(current)</span>
-              </Nav.Link>
+    <>
+      <div ref={(node) => node}>
+        <Navbar
+          onToggle={onToggleHandler}
+          expanded={isNavExpanded}
+          color="light"
+          expand="lg"
+          className="navbar-light osahan-nav shadow-sm"
+        >
+          <Container>
+            <Navbar.Brand to="/">
+              <Image src="/img/logo.png" alt="Maaroos" className="logoImage" />
+            </Navbar.Brand>
+            <Navbar.Toggle />
+            <Navbar.Collapse id="navbarNavDropdown">
+              <Nav activeKey={0} className="ml-auto" onSelect={onCloseMenu}>
+                <Nav.Link
+                  eventKey={0}
+                  as={NavLink}
+                  activeclassname="active"
+                  to="/"
+                >
+                  Home <span className="sr-only">(current)</span>
+                </Nav.Link>
 
-              <Nav.Link
-                eventKey={1}
-                as={NavLink}
-                activeclassname="active"
-                to="/listing"
-              >
-                Listing
-              </Nav.Link>
+                <Nav.Link
+                  eventKey={1}
+                  as={NavLink}
+                  activeclassname="active"
+                  to="/listing"
+                >
+                  Listing
+                </Nav.Link>
 
-              <Nav.Link
-                eventKey={2}
-                as={NavLink}
-                activeclassname="active"
-                to="/login"
-              >
-                Login
-              </Nav.Link>
+                {!user ? (
+                  <>
+                    <Nav.Link
+                      eventKey={2}
+                      as={NavLink}
+                      activeclassname="active"
+                      to=""
+                      onClick={showModal}
+                    >
+                      <Icofont icon="ui-user" /> Login
+                    </Nav.Link>
 
-              <Nav.Link
-                eventKey={3}
-                as={NavLink}
-                activeclassname="active"
-                to="/register"
-              >
-                Register
-              </Nav.Link>
+                    {/* <Nav.Link
+                      eventKey={3}
+                      as={NavLink}
+                      activeclassname="active"
+                      to="/register"
+                    >
+                      Register
+                    </Nav.Link> */}
+                  </>
+                ) : (
+                  ""
+                )}
 
-              {/* <Nav.Link
+                {user ? (
+                  <NavDropdown
+                    id={`nav-2`}
+                    alignRight
+                    title={
+                      <DropDownTitle
+                        className="d-inline-block"
+                        image="img/user/4.png"
+                        imageAlt="user"
+                        imageClass="nav-osahan-pic rounded-pill"
+                        title="My Account"
+                      />
+                    }
+                  >
+                    <NavDropdown.Item
+                      eventKey={4.1}
+                      as={NavLink}
+                      activeactiveclassname="active"
+                      to="/myaccount"
+                    >
+                      <Icofont icon="ui-user" /> Profile
+                    </NavDropdown.Item>
+                    {/* <NavDropdown.Item
+                    eventKey={4.2}
+                    as={NavLink}
+                    activeactiveclassname="active"
+                    to="/myaccount/orders"
+                  >
+                    <Icofont icon="food-cart" /> Orders
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    eventKey={4.3}
+                    as={NavLink}
+                    activeactiveclassname="active"
+                    to="/myaccount/offers"
+                  >
+                    <Icofont icon="sale-discount" /> Offers
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    eventKey={4.4}
+                    as={NavLink}
+                    activeactiveclassname="active"
+                    to="/myaccount/favourites"
+                  >
+                    <Icofont icon="heart" /> Favourites
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    eventKey={4.5}
+                    as={NavLink}
+                    activeactiveclassname="active"
+                    to="/myaccount/payments"
+                  >
+                    <Icofont icon="credit-card" /> Payments
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    eventKey={4.6}
+                    as={NavLink}
+                    activeactiveclassname="active"
+                    to="/myaccount/addresses"
+                  >
+                    <Icofont icon="location-pin" /> Addresses
+                  </NavDropdown.Item> */}
+
+                    <NavDropdown.Item
+                      eventKey={4.2}
+                      as={NavLink}
+                      activeactiveclassname="active"
+                      to=""
+                      onClick={signOut}
+                    >
+                      <Icofont icon="sign-out" /> Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                ) : (
+                  ""
+                )}
+
+                {/* <Nav.Link
                 eventKey={1}
                 as={NavLink}
                 activeclassname="active"
@@ -115,7 +199,7 @@ function Header() {
                 <Icofont icon="sale-discount" /> Offers{" "}
                 <Badge variant="danger">New</Badge>
               </Nav.Link> */}
-              {/* <NavDropdown
+                {/* <NavDropdown
                 id={`nav-0`}
                 title="Restaurants"
                 alignRight
@@ -146,7 +230,7 @@ function Header() {
                   Checkout
                 </NavDropdown.Item>
               </NavDropdown> */}
-              {/* <NavDropdown id={`nav-1`} title="Pages" alignRight>
+                {/* <NavDropdown id={`nav-1`} title="Pages" alignRight>
                 <NavDropdown.Item
                   eventKey={3.1}
                   as={NavLink}
@@ -196,7 +280,7 @@ function Header() {
                   Extra
                 </NavDropdown.Item>
               </NavDropdown> */}
-              {/* <NavDropdown
+                {/* <NavDropdown
                 id={`nav-2`}
                 alignRight
                 title={
@@ -328,11 +412,28 @@ function Header() {
                   </div>
                 </div>
               </NavDropdown> */}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    </div>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+      </div>
+      {notification ? (
+        <Alert
+          variant="warning"
+          dismissible
+          role="alert"
+          className="currentOrderInfo"
+          onClose={() => {
+            setNotification(false);
+          }}
+        >
+          Track your current order #OR-1783883 here
+        </Alert>
+      ) : (
+        ""
+      )}
+      <LoginModal visible={visible} onHide={showModal} />
+    </>
   );
 }
 

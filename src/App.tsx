@@ -24,7 +24,7 @@ function App() {
   const location = useLocation();
   return (
     <>
-      {location.pathname !== "/login" && location.pathname !== "/register" ? (
+      {location.pathname !== "/auth" && location.pathname !== "/register" ? (
         <Header />
       ) : (
         ""
@@ -36,7 +36,7 @@ function App() {
         <Route path="/myaccount" element={<MyAccount />} />
         <Route path="/404" element={<NotFound />} />
         <Route path="/extra" element={<Extra />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/auth" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/track-order" element={<TrackOrder />} />
         <Route path="/invoice" element={<Invoice />} />
@@ -45,7 +45,7 @@ function App() {
         <Route path="/detail" element={<Detail />} />
         <Route element={<NotFound />} />
       </Routes>
-      {location.pathname !== "/login" && location.pathname !== "/register" ? (
+      {location.pathname !== "/auth" && location.pathname !== "/register" ? (
         <Footer />
       ) : (
         ""

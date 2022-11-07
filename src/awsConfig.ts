@@ -6,8 +6,8 @@ const awsConfig = {
   aws_cognito_identity_pool_id:
     "ap-south-1:563c49da-03f5-45ed-baec-72d2736c1a6b",
   aws_cognito_region: "ap-south-1",
-  aws_user_pools_id: "ap-south-1_1sSJmV5Tg",
-  aws_user_pools_web_client_id: "6g7pgqpc7lmike0hbn87nct5fu",
+  aws_user_pools_id: "ap-south-1_3qYBEn0wi",
+  aws_user_pools_web_client_id: "rarfa0em2dlen4atf36iikjhn",
   oauth: {},
   aws_cognito_username_attributes: [],
   aws_cognito_social_providers: [],

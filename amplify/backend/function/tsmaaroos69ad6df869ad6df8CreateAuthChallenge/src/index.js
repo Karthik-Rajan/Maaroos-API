@@ -7,7 +7,7 @@ exports.handler = (event, context, callback) => {
   const sns = new AWS.SNS({ region: 'ap-south-1' });
   sns.publish(
     {
-      Message: 'Otp for Maaroos is : ' + challengeAnswer,
+      Message: '[MAAROOS] '+challengeAnswer+' is OTP to login to your Maaroos Account. It is valid only for 30 minutes.',
       PhoneNumber: phoneNumber,
       MessageStructure: 'string',
       MessageAttributes: {

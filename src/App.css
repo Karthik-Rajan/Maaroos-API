@@ -22,6 +22,9 @@ Version: 1.0
 */
 
 /* Header */
+.currentOrderInfo{
+  margin-bottom: unset !important;
+}
 .logoImage{
   width : 190px;
 }
@@ -111,9 +114,27 @@ img{
   padding-left: 1px;
 }
 /* login/Register */
+
 :root {
   --input-padding-x: 1.5rem;
   --input-padding-y: 0.75rem;
+}
+.bestSliderImage{
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+.bg-image{
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: lightgray;
+}
+.form-label-group>input{
+  padding: 10px !important;
+  font-size: medium !important;
+}
+.text-right{
+  text-align: right !important;
 }
 #signUpErr{
   color : red;
@@ -121,13 +142,11 @@ img{
 #signUpInfo{
   color : green
 }
-.login,
-.image {
-  min-height: 100vh;
+.mobileDisabled{
+    background-color: rgb(221, 219, 219) !important;
 }
+
 .bg-image {
-  background-image: url('/img/login-bg.png');
-  background-size: cover;
   background-position: center;
 }
 .login-heading {
@@ -145,7 +164,6 @@ img{
 }
 .form-label-group>input,
 .form-label-group>label {
-  padding: 15px 0;
   border-radius: 0px;
   height: 51px;
   background: transparent !important;
@@ -906,6 +924,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d82926', end
   font-weight: 600;
 }
 /* My Account */
+.noPadding{
+  padding: unset !important;
+}
+.noPadding li a{
+  background-color: white !important;
+}
 .payments-item img.mr-3 {
   width: 47px;
 }

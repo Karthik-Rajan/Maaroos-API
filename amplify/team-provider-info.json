@@ -19,7 +19,7 @@
       "function": {
         "tsmaaroos69ad6df869ad6df8CreateAuthChallenge": {
           "deploymentBucketName": "amplify-tsmaaroos-dev-123852-deployment",
-          "s3Key": "amplify-builds/tsmaaroos69ad6df869ad6df8CreateAuthChallenge-4343464c314246542f31-build.zip"
+          "s3Key": "amplify-builds/tsmaaroos69ad6df869ad6df8CreateAuthChallenge-52305059775442637944-build.zip"
         },
         "tsmaaroos69ad6df869ad6df8DefineAuthChallenge": {
           "deploymentBucketName": "amplify-tsmaaroos-dev-123852-deployment",
@@ -27,11 +27,11 @@
         },
         "tsmaaroos69ad6df869ad6df8PreSignup": {
           "deploymentBucketName": "amplify-tsmaaroos-dev-123852-deployment",
-          "s3Key": "amplify-builds/tsmaaroos69ad6df869ad6df8PreSignup-485034345a4e2b394f69-build.zip"
+          "s3Key": "amplify-builds/tsmaaroos69ad6df869ad6df8PreSignup-36685257493047566751-build.zip"
         },
         "tsmaaroos69ad6df869ad6df8VerifyAuthChallengeResponse": {
           "deploymentBucketName": "amplify-tsmaaroos-dev-123852-deployment",
-          "s3Key": "amplify-builds/tsmaaroos69ad6df869ad6df8VerifyAuthChallengeResponse-476c436178466a463465-build.zip"
+          "s3Key": "amplify-builds/tsmaaroos69ad6df869ad6df8VerifyAuthChallengeResponse-57303646356944574753-build.zip"
         }
       }
     }

@@ -4,32 +4,47 @@ import { Row, Col, Container, Form } from "react-bootstrap";
 import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
 import awsConfig from "../awsConfig";
-import { verify } from "crypto";
+import { useNavigate } from "react-router-dom";
+import { PhoneInput } from "react-contact-number-input";
+import "../PhoneInput.css";
+import {
+  OTPSENT,
+  NOUSER,
+  WRONGOTP,
+  USEREXISTS,
+  UNKNOWNERR,
+} from "../ErrorConstants";
 
 function Register() {
   Amplify.configure(awsConfig);
-  const NOTSIGNIN = "You are NOT logged in";
-  const SIGNEDIN = "You have logged in successfully";
-  const SIGNEDOUT = "You have logged out successfully";
-  const OTPSENT = "OTP has sent to your number";
-  const NOUSER = "You are not registered";
-  const WRONGOTP = "OTP is incorrect";
-  const USEREXISTS = "User already exists";
-  const UNKNOWNERR = "Oops, Something went wrong. Please try again.";
-  const VERIFYNUMBER = "Verifying number (Country code +XX needed)";
+  let navigate = useNavigate();
 
   const [message, setMessage] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const [info, setInfo] = useState("");
   const [user, setUser] = useState(null);
   const [session, setSession] = useState(null);
   const [otp, setOtp] = useState("");
   const [number, setNumber] = useState("");
-  const password = Math.random().toString(10) + "Abc#";
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    verifyAuth();
+  }, []);
+
+  const verifyAuth = () => {
+    Auth.currentAuthenticatedUser()
+      .then((user) => {
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const signIn = () => {
     Auth.signIn(number)
       .then((result) => {
-        console.log("Debugging");
         console.log(result);
         setSession(result);
         setInfo(OTPSENT);
@@ -37,6 +52,7 @@ function Register() {
       })
       .catch((e) => {
         setInfo("");
+        console.log(e);
         if (e.code === "UserNotFoundException") {
           setMessage(NOUSER);
         } else if (e.code === "UsernameExistsException") {
@@ -47,6 +63,7 @@ function Register() {
       });
   };
   const signUp = async () => {
+    setDisabled(true);
     const result = await Auth.signUp({
       username: number,
       password,
@@ -56,11 +73,14 @@ function Register() {
     })
       .then(() => signIn())
       .catch((e) => {
+        console.log(e);
+        setDisabled(false);
         setInfo("");
         if (e.code === "UserNotFoundException") {
           setMessage(NOUSER);
         } else if (e.code === "UsernameExistsException") {
           setMessage(USEREXISTS);
+
           //signIn();
         } else {
           setMessage(UNKNOWNERR);
@@ -69,12 +89,19 @@ function Register() {
     return result;
   };
 
+  const reset = () => {
+    setSession(null);
+    setInfo("");
+    setMessage("");
+    setDisabled(false);
+  };
+
   const verifyOtp = () => {
-    console.log(session, otp);
     Auth.sendCustomChallengeAnswer(session, otp)
       .then((user) => {
         setUser(user);
         setSession(null);
+        navigate("/");
       })
       .catch((err) => {
         setInfo("");
@@ -83,6 +110,15 @@ function Register() {
       });
   };
 
+  const reSend = () => {
+    Auth.resendSignUp(number)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <Container fluid className="bg-white">
       <Row>
@@ -94,15 +130,56 @@ function Register() {
                 <Col md={9} lg={8} className="mx-auto pl-5 pr-5">
                   <h3 className="login-heading mb-4">Hey, New Buddy!</h3>
                   <Form>
+                    {/* <PhoneInput
+                      countrySelectProps={{ unicodeFlags: true }}
+                      inputComponent={
+                        <Form.Control
+                          className={disabled ? "mobileDisabled" : ""}
+                          type="mobile"
+                          placeholder="Mobile Number"
+                          id="inputEmail"
+                          onChange={(event: any) =>
+                            setNumber(event.target.value)
+                          }
+                          readOnly={disabled}
+                        />
+                      }
+                      initialValueFormat="national"
+                      placeholder="Mobile Number"
+                      value={number}
+                      onChange={(event: any) => {}}
+                    /> */}
                     <div className="form-label-group">
                       <Form.Control
+                        className={disabled ? "mobileDisabled" : ""}
                         type="mobile"
-                        id="inputEmail"
                         placeholder="Mobile Number"
+                        id="inputEmail"
                         onChange={(event: any) => setNumber(event.target.value)}
+                        readOnly={disabled}
                       />
-                      <Form.Label htmlFor="inputEmail">
-                        Mobile Number
+                      <Form.Label
+                        className={disabled ? "mobileDisabled" : ""}
+                        htmlFor="inputEmail"
+                      >
+                        Mobile Number (eg : +919876543210)
+                      </Form.Label>
+                    </div>
+                    <div className="form-label-group">
+                      <Form.Control
+                        type="password"
+                        id="inputPassword"
+                        placeholder="Password"
+                        className="formInputSize"
+                        readOnly={disabled}
+                        onChange={(event: any) => {
+                          setPassword(event.target.value);
+                          if (event.target.value.length > 6) {
+                          }
+                        }}
+                      />
+                      <Form.Label htmlFor="inputPassword">
+                        Password (Minimum 8 length)
                       </Form.Label>
                     </div>
 
@@ -110,23 +187,24 @@ function Register() {
                       <div className="form-label-group">
                         <Form.Control
                           type="text"
-                          id="inputPassword"
+                          id="inputOtp"
                           placeholder="OTP"
+                          className="formInputSize"
+                          minLength={6}
                           onChange={(event: any) => {
                             setOtp(event.target.value);
                           }}
                         />
-                        <Form.Label htmlFor="inputPassword">OTP</Form.Label>
+                        <Form.Label htmlFor="inputOtp">
+                          OTP (6 Digits)
+                        </Form.Label>
                       </div>
                     ) : (
                       ""
                     )}
-                    {/* <div className="form-label-group mb-4">
-	                                 <Form.Control type="text" id="inputPromo" placeholder="Promocode" />
-	                                 <Form.Label htmlFor="inputPromo">Promocode</Form.Label>
-	                              </div> */}
                     <span id="signUpErr">{message}</span>
                     <span id="signUpInfo">{info}</span>
+
                     {!session ? (
                       <Link
                         to=""
@@ -136,21 +214,31 @@ function Register() {
                         Send OTP
                       </Link>
                     ) : (
-                      <Link
-                        to=""
-                        className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
-                        onClick={verifyOtp}
-                      >
-                        Verify OTP
-                      </Link>
+                      <>
+                        <Link
+                          to=""
+                          className="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
+                          onClick={verifyOtp}
+                        >
+                          Register
+                        </Link>
+                        <Link
+                          to=""
+                          className="btn btn-lg btn-info btn-block btn-login text-uppercase font-weight-bold mb-2"
+                          onClick={reset}
+                        >
+                          Reset
+                        </Link>
+                      </>
                     )}
                     {session ? (
-                      <Link className="" to="">
+                      <Link className="" to="" onClick={reSend}>
                         Resend OTP in 3 mins
                       </Link>
                     ) : (
                       ""
                     )}
+
                     <div className="text-center pt-3">
                       Already have an account?{" "}
                       <Link className="font-weight-bold" to="/login">
