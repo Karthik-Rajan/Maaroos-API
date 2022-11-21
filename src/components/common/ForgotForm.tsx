@@ -27,28 +27,45 @@ const ForgotForm = (props: any) => {
             {...props.register("mobile", { required: true })}
           />
         </Form.Group>
-        <Form.Group className="col-md-12">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Min 8 length"
-            {...props.register("password", {
-              required: true,
-              min: 8,
-              pattern: /^[\S]+.*[\S]+$/,
-            })}
-          />
-        </Form.Group>
+        {props.showForgotPassword && (
+          <Form.Group className="col-md-12">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Min 8 length"
+              {...props.register("forgotPassword", {
+                required: true,
+                min: 8,
+                pattern: /^[\S]+.*[\S]+$/,
+              })}
+            />
+          </Form.Group>
+        )}
+        {props.showForgotOtp && (
+          <Form.Group className="col-md-12">
+            <Form.Label>OTP</Form.Label>
+            <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="2****7"
+                {...props.register("forgotOtp", {
+                  min: 6,
+                  required: true,
+                })}
+              />
+            </InputGroup>
+          </Form.Group>
+        )}
       </div>
       <div className="pt-3">
         <Link
           className="font-weight-bold"
           to=""
           onClick={() => {
-            props.reset();
+            props.backToLogin();
           }}
         >
-          {props.signIn ? "Forgot your password? " : " "}
+          Back to login
         </Link>
       </div>
     </Form>

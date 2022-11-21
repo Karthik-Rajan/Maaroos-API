@@ -114,7 +114,7 @@ const SignUpForm = (props: any) => {
             {errors.signUpPassword &&
               (errors.signUpPassword.type == "required" ? (
                 <li>Password field is required</li>
-              ) : errors.password.type == "pattern" ? (
+              ) : errors.signUpPassword.type == "pattern" ? (
                 <li>
                   Password should :
                   <br />

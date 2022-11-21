@@ -5,6 +5,7 @@
   "dependencies": {
     "@aws-amplify/auth": "^4.6.10",
     "@aws-amplify/core": "^4.7.8",
+    "@aws-cdk/aws-rds": "^1.181.0",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.19",

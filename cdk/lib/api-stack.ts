@@ -16,7 +16,7 @@ export class ApiStack extends cdk.Stack {
     });
 
     // fetchPartnerRole.addManagedPolicy(
-    //   iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonDynamoDBFullAccess')
+    //   iam.ManagedPolicy.fromAwsManagedPolicyName("AWSLambdaBasicExecutionRole")
     // );
 
     // defines an AWS Lambda resource

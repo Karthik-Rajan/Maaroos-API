@@ -48,15 +48,15 @@ const SignInForm = (props: any) => {
             className="font-weight-bold"
             to=""
             onClick={() => {
-              props.reset();
+              props.showForgot();
             }}
           >
-            {props.form == "signin" ? "Forgot your password? " : " "}
+            {props.form == "signin" && "Forgot your password? "}
           </Link>
         </div>
       </Form>
 
-      {errors.mobile || errors.password || props.message ? (
+      {(errors.mobile || errors.password || props.message) && (
         <Alert
           variant="danger"
           dismissible
@@ -74,28 +74,27 @@ const SignInForm = (props: any) => {
 
             {errors.mobile && <li>Mobile number field is required</li>}
 
-            {errors.password &&
-              (errors.password.type == "required" ? (
-                <li>Password field is required</li>
-              ) : errors.password.type == "pattern" ? (
-                <li>
-                  Password should :
-                  <br />
-                  1. Contains at least 1 number (0 to 9)
-                  <br />
-                  2. Contains at least 1 special character{" "}
-                  {`(^ $ * . [ ] { } ( ) ? - " ! @ # % & / \ , > < ' : ; | _ ~ ` +
-                    `+ =)`}
-                </li>
-              ) : errors.password.type == "min" ? (
-                <li>Password field needs atleast 8 length</li>
-              ) : (
-                ""
-              ))}
+            {errors.password && errors.password.type == "required" && (
+              <li>Password field is required</li>
+            )}
+
+            {errors.password && errors.password.type == "pattern" && (
+              <li>
+                Password should :
+                <br />
+                1. Contains at least 1 number (0 to 9)
+                <br />
+                2. Contains at least 1 special character{" "}
+                {`(^ $ * . [ ] { } ( ) ? - " ! @ # % & / \ , > < ' : ; | _ ~ ` +
+                  `+ =)`}
+              </li>
+            )}
+
+            {errors.password && errors.password.type == "min" && (
+              <li>Password field needs atleast 8 length</li>
+            )}
           </ul>
         </Alert>
-      ) : (
-        ""
       )}
     </>
   );

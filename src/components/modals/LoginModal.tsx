@@ -54,6 +54,7 @@ const LoginModal = (props: any) => {
 
   /*** Forgot */
   const [forgot, setForgot] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   /**Common */
   const [form, setForm] = useState("signin");
@@ -63,6 +64,7 @@ const LoginModal = (props: any) => {
   /** Form Ref */
   const signInFormRef = useRef();
   const signUpFormRef = useRef();
+  const forgotForm = useRef();
 
   const {
     register,
@@ -90,7 +92,7 @@ const LoginModal = (props: any) => {
         } else if (e.code === "UsernameExistsException") {
           setMessage(OTPSENT);
         } else {
-          setMessage(UNKNOWNERR);
+          setMessage(e.message);
         }
       });
   };
@@ -120,11 +122,14 @@ const LoginModal = (props: any) => {
           if (e.code === "UserNotFoundException") {
             setMessage(NOUSER);
           } else if (e.code === "UsernameExistsException") {
-            setMessage(USEREXISTS);
+            setMessage(
+              USEREXISTS + ` If you want to resend OTP, please try resending it`
+            );
+            //resendOtp(userName);
 
             //signIn();
           } else {
-            setMessage(UNKNOWNERR);
+            setMessage(e.message);
           }
         });
     } else {
@@ -143,9 +148,14 @@ const LoginModal = (props: any) => {
   };
 
   const resendOtp = (resendMobile: any) => {
-    Auth.resendSignUp(resendMobile).then((res) => {
-      setShowOtp(true);
-    });
+    resendMobile = resendMobile.replace("+", "");
+    Auth.resendSignUp(resendMobile)
+      .then((res) => {
+        setShowOtp(true);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   const reset = () => {
@@ -157,6 +167,15 @@ const LoginModal = (props: any) => {
     setNotification(false);
   };
 
+  const showForgot = () => {
+    setForm("forgot");
+  };
+
+  const onForgotFormSubmit = () => {};
+  const backToLogin = () => {
+    setForm("signin");
+  };
+
   return (
     <Modal show={props.visible} onHide={props.onHide} centered>
       <Modal.Header closeButton={true}>
@@ -164,13 +183,11 @@ const LoginModal = (props: any) => {
           {form == "signin"
             ? `SIGN IN`
             : form == "forgot"
-            ? `Reset your password`
+            ? `FORGOT`
             : `SIGN UP`}
-          {form == "signin" ? (
-            <i> - Welcome Back!</i>
-          ) : (
-            <i> - Hey, New Buddy!</i>
-          )}
+          {form == "signin" && <i> - Welcome Back!</i>}
+          {form == "forgot" && <i> - Reset your password</i>}
+          {form == "signup" && <i> - Hey, New Buddy!</i>}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -185,10 +202,26 @@ const LoginModal = (props: any) => {
             signInFormRef={signInFormRef}
             message={message}
             setMessage={setMessage}
+            showForgot={showForgot}
+            backToLogin={backToLogin}
           />
         )}
 
-        {form == "forgot" && <ForgotForm />}
+        {form == "forgot" && (
+          <ForgotForm
+            onForgotFormSubmit={onForgotFormSubmit}
+            register={register}
+            errors={errors}
+            handleSubmit={handleSubmit}
+            reset={reset}
+            form={form}
+            forgotForm={forgotForm}
+            message={message}
+            setMessage={setMessage}
+            showForgotPassword={showForgotPassword}
+            setShowForgotPassword={setShowForgotPassword}
+          />
+        )}
 
         {form == "signup" && (
           <SignUpForm
@@ -232,7 +265,7 @@ const LoginModal = (props: any) => {
         >
           CANCEL
         </Button>
-        {form == "signin" ? (
+        {form == "signin" && (
           <Button
             type="submit"
             variant="primary"
@@ -241,7 +274,8 @@ const LoginModal = (props: any) => {
           >
             SIGN IN
           </Button>
-        ) : (
+        )}
+        {form == "signup" && (
           <Button
             type="submit"
             variant="primary"
@@ -249,6 +283,16 @@ const LoginModal = (props: any) => {
             className="d-flex w-100 text-center justify-content-center"
           >
             SIGN UP
+          </Button>
+        )}
+        {form == "forgot" && (
+          <Button
+            type="submit"
+            variant="primary"
+            form="forgotForm"
+            className="d-flex w-100 text-center justify-content-center"
+          >
+            Reset Password
           </Button>
         )}
 
