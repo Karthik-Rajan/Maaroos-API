@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import Select2 from "react-select2-wrapper";
 import { Form } from "react-bootstrap";
 import Icofont from "react-icofont";
@@ -16,17 +17,13 @@ const SearchBar = (props: any) => {
 
   const navigate = useNavigate();
 
-  let coordinates = {};
-
-  useEffect(() => {}, []);
-
   const [location, setLocation] = useState("");
+  const [coordinates, setCoordinates] = useState({});
 
   const { ref } = usePlacesWidget({
     apiKey: `AIzaSyBhVIXKdp4FXoHLxNqKoPHpjZQk7sc0-pI`,
     onPlaceSelected: (place) => {
-      let { name, coordinates } = fetchAddress(place);
-      setLocation(name);
+      fetchAddress(place);
     },
     options: {
       // types: ["(cities)"], //REGIONS
@@ -35,7 +32,6 @@ const SearchBar = (props: any) => {
   });
 
   const fetchAddress = (response: any) => {
-    const address = response.results[0]?.formatted_address;
     let city, state, locality, country;
     for (let i = 0; i < response.results[0].address_components.length; i++) {
       for (
@@ -59,23 +55,19 @@ const SearchBar = (props: any) => {
         }
       }
     }
-
-    return {
-      name: locality + ", " + city + ", " + state + ", " + country,
-      coordinates: response.results[0].geometry.location,
-    };
+    setLocation(locality + ", " + city + ", " + state + ", " + country);
+    setCoordinates(response.results[0].geometry.location);
   };
 
-  const onLocateHandler = () => {
-    navigator.geolocation.getCurrentPosition(
+  const onLocateHandler = async () => {
+    await navigator.geolocation.getCurrentPosition(
       function (position) {
         Geocode.fromLatLng(
           position.coords.latitude.toString(),
           position.coords.longitude.toString()
         ).then(
           (response: any) => {
-            let { name, coordinates } = fetchAddress(response);
-            setLocation(name);
+            fetchAddress(response);
           },
           (error: any) => {
             console.error(error);
@@ -90,8 +82,9 @@ const SearchBar = (props: any) => {
 
   const onSearch = () => {
     const state = { location: { coordinates, name: location } };
-    console.log(state);
-    navigate("/listing", { state });
+    props.dispatch({ type: "LOCATION", payload: state });
+    console.log("OnSearch", state);
+    navigate("/listing");
   };
 
   return (
@@ -145,4 +138,11 @@ const SearchBar = (props: any) => {
     </div>
   );
 };
-export default SearchBar;
+
+const mapStateToProps = (state: any) => {
+  console.log("Maps", state);
+  return {
+    location: { ...state },
+  };
+};
+export default connect(mapStateToProps)(SearchBar);

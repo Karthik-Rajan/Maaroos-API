@@ -1,7 +1,6 @@
 import { Sequelize, DataTypes } from "sequelize";
-import DBClient from "../utils/DbConnection";
-
-const sequelize = DBClient();
+import { sequelize } from "../utils/DbConnection";
+import Review from "./Review";
 
 const Vendor = sequelize.define(
   "vendors",
@@ -15,11 +14,11 @@ const Vendor = sequelize.define(
       allowNull: false,
     },
     lat: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT(10, 6),
       allowNull: false,
     },
     lng: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT(10, 6),
       allowNull: false,
     },
     address: {
@@ -37,6 +36,27 @@ const Vendor = sequelize.define(
       ],
       defaultValue: "PENDING",
     },
+    is_veg: {
+      type: DataTypes.ENUM,
+      values: ["YES", "NO"],
+      defaultValue: "NO",
+    },
+    is_promoted: {
+      type: DataTypes.ENUM,
+      values: ["YES", "NO"],
+      defaultValue: "NO",
+    },
+    logo_url: {
+      type: DataTypes.STRING,
+    },
+    rating_count: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    rating_avg: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0,
+    },
   },
   {
     timestamps: true,
@@ -45,4 +65,5 @@ const Vendor = sequelize.define(
   }
 );
 
+Vendor.hasMany(Review, { foreignKey: "vendor_id" });
 export default Vendor;

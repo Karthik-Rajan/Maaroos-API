@@ -42,7 +42,7 @@ function App() {
         <Route path="/invoice" element={<Invoice />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/thanks" element={<Thanks />} />
-        <Route path="/detail" element={<Detail />} />
+        <Route path="/listing/:vId/detail" element={<Detail />} />
         <Route element={<NotFound />} />
       </Routes>
       {location.pathname !== "/auth" && location.pathname !== "/register" ? (

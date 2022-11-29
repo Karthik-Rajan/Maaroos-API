@@ -8,18 +8,18 @@ const ProductItems = (props: any) => {
       <Col md={4} sm={6} key={product.id} className="mb-4 pb-2">
         <CardItem
           title={product.name}
-          subTitle={product.type}
+          subTitle={product.is_veg === "YES" ? "VEG" : "ALL"}
           imageAlt="Product"
-          image={product.image}
+          image={product.logo_url || ""}
           imageClass="img-fluid item-img"
-          linkUrl="detail"
+          linkUrl="124242/detail"
           offerText="65% off | Use Coupon OSAHAN50"
-          time={product.duration}
-          price={product.price}
-          showPromoted={true}
+          time={"0.00"}
+          price={"0.0"}
+          showPromoted={product.is_promoted === "YES"}
           promotedVariant="dark"
           favIcoIconColor="text-danger"
-          rating={product.rating + "(" + product.rated_count + "+)"}
+          rating={product.rating_avg + " (" + product.rating_count + "+)"}
         />
       </Col>
     );

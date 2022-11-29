@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import { Row, Col, Container } from "react-bootstrap";
 import CategoriesCarousel from "./common/CategoriesCarousel";
@@ -6,73 +6,50 @@ import ProductItems from "./common/ProductItems";
 import SideBarTitle from "./common/SideBarTitle";
 import SideBarFilter from "./common/SideBarFilter";
 import SearchBar from "./common/SearchBar";
+import { BASE_URL, FETCH } from "../constants/vendor";
+import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 
-function List() {
-  const { state } = useLocation();
+let input = {
+  lat: "28.6261",
+  lng: "79.821602",
+  is_veg: "NO",
+  rating_avg: 0,
+  distance: 5,
+};
 
-  console.log(state);
+const callVendorList = async (params: any = {}) => {
+  input = { ...input, ...params };
 
-  const vendorList: any = [
-    {
-      id: "l1",
-      name: "Bite me Sand wiches",
-      location: "Madipakkam",
-      distance: 1,
-      rating: 1,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS613-zWfTF6jiUFkzh4_mQza3b7x2FsbG4I2dNJtrl&s",
-      type: "VEG",
-      isFavourite: true,
-      rated_count: 10,
-      duration: "10 - 15 min",
+  return await fetch(BASE_URL + FETCH, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    {
-      id: "l2",
-      name: "Megalai Foods",
-      location: "Madipakkam",
-      distance: 2.5,
-      rating: 3,
-      image:
-        "https://media.istockphoto.com/photos/clean-white-bath-towels-on-the-neatly-clean-bedroom-coziness-and-picture-id1303630250?b=1&k=20&m=1303630250&s=170667a&w=0&h=zzWNuiaNn6hv1MxXQMSHAl4tKY2Me8Yg03htMMsaxhI=",
-      type: "ALL",
-      isFavourite: true,
-      rated_count: 10,
-      duration: "10 - 15 min",
-    },
-    {
-      id: "l3",
-      name: "Mega Food Store",
-      location: "Madipakkam",
-      distance: 6,
-      rating: 2,
-      image: "",
-      type: "ALL",
-      isFavourite: true,
-      rated_count: 10,
-      duration: "10 - 15 min",
-    },
-  ];
+    body: JSON.stringify(input),
+  });
+};
 
-  let [list, setList] = useState(vendorList);
+function List(props: any) {
+  const location = useLocation();
 
-  type FilterObject = { distance: number; type: string; rating: number };
+  let [list, setList] = useState([]);
 
-  const filterList = (filterObj: FilterObject) => {
-    list = vendorList;
+  let { lat, lng } = props.location.coordinates;
+  let locName = props.location.name;
 
-    const updatedList = _.filter(list, (each) => {
-      return (
-        //Type Condition
-        (filterObj.type === "VEG" ? filterObj.type === each.type : true) &&
-        //Distance Condition
-        filterObj.distance >= each.distance &&
-        //Rating Condition
-        (filterObj.rating ? filterObj.rating <= each.rating : true)
-      );
-    });
-    setList(updatedList);
-  };
+  useEffect(() => {
+    callVendorList({ lat, lng })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setList(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <>
@@ -90,11 +67,11 @@ function List() {
           <SideBarTitle />
           <Row>
             <Col md={3}>
-              <SideBarFilter filterList={filterList} />
+              <SideBarFilter filterList={list} />
             </Col>
             <Col md={9}>
               <CategoriesCarousel />
-              <ProductItems products={vendorList} />
+              <ProductItems products={list} />
             </Col>
           </Row>
         </Container>
@@ -103,4 +80,9 @@ function List() {
   );
 }
 
-export default List;
+function mapStateToProps(state: any) {
+  return {
+    ...state,
+  };
+}
+export default connect(mapStateToProps)(List);

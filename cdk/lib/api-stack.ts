@@ -3,39 +3,21 @@ import * as lambda from "@aws-cdk/aws-lambda";
 import * as apigw from "@aws-cdk/aws-apigateway";
 import * as iam from "@aws-cdk/aws-iam";
 import CustomProps from "../utils/CustomProps";
+import * as path from "path";
 
 export class ApiStack extends cdk.Stack {
   public fetchPartnerLambda: lambda.Function;
+  public fetchPartnerDetailLambda: lambda.Function;
 
   constructor(scope: cdk.App, id: string, props?: CustomProps) {
     super(scope, id, props);
 
-    //Lambda
-    const fetchPartnerRole = new iam.Role(this, "fetchPartners", {
-      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-    });
-
-    // fetchPartnerRole.addManagedPolicy(
-    //   iam.ManagedPolicy.fromAwsManagedPolicyName("AWSLambdaBasicExecutionRole")
-    // );
-
-    // defines an AWS Lambda resource
-    this.fetchPartnerLambda = new lambda.Function(this, "fetchPartner", {
-      runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset("lambda/build"),
-      handler: "fetchpartner.handler",
-      role: fetchPartnerRole,
-      environment: {
-        STAGE: props?.stage || "prod",
-        TABLE_NAME: "vendors",
-      },
-    });
-
-    // defines an API Gateway REST API resource backed by our "hello" function.
-    const fetchPartnerApi = new apigw.LambdaRestApi(this, "fetch", {
-      description: "fetch-vendors",
-      handler: this.fetchPartnerLambda,
+    const restParams: any = {
       proxy: false,
+      deploy: true,
+      deployOptions: {
+        stageName: "development",
+      },
       //set up CORS
       defaultCorsPreflightOptions: {
         allowHeaders: [
@@ -44,6 +26,12 @@ export class ApiStack extends cdk.Stack {
           "Authorization",
           "X-Api-Key",
           "X-Amz-Security-Token",
+          "Origin",
+          "X-Requested-With",
+          "Accept",
+          "x-client-key",
+          "x-client-token",
+          "x-client-secret",
         ],
         allowMethods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
         allowCredentials: true,
@@ -53,10 +41,58 @@ export class ApiStack extends cdk.Stack {
           "http://localhost:3002",
         ],
       },
+    };
+
+    //Lambda
+    const fetchPartnerRole = new iam.Role(this, "fetchPartners", {
+      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
     });
 
-    let fetchPartnerResource = fetchPartnerApi.root.addResource("list");
-    fetchPartnerResource.addMethod("GET");
-    fetchPartnerResource.addMethod("POST");
+    const lambdaProps: any = {
+      runtime: lambda.Runtime.NODEJS_14_X,
+      code: lambda.Code.fromAsset("lambda/build"),
+      role: fetchPartnerRole,
+    };
+
+    fetchPartnerRole.addManagedPolicy(
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AWSLambdaExecute")
+    );
+
+    // Fetch Vendor API
+    this.fetchPartnerLambda = new lambda.Function(this, "fetchPartner", {
+      ...lambdaProps,
+      handler: "fetchpartner.handler",
+    });
+
+    const fetchPartnerApi = new apigw.LambdaRestApi(this, "fetch", {
+      description: "fetch-vendors",
+      handler: this.fetchPartnerLambda,
+      ...restParams,
+    });
+
+    // Fetch Vendor Detail
+    this.fetchPartnerDetailLambda = new lambda.Function(
+      this,
+      "fetchPartnerDetail",
+      {
+        ...lambdaProps,
+        handler: "fetchPartnerDetail.handler",
+      }
+    );
+
+    const fetchPartnerDetailApi = new apigw.LambdaIntegration(
+      this.fetchPartnerDetailLambda
+    );
+
+    // POST /vendor/list
+    let vendorResource = fetchPartnerApi.root.addResource("vendor");
+    let vendorListResource = vendorResource.addResource("list");
+    vendorListResource.addMethod("POST");
+
+    // GET /vendor/{vId}
+    let vendorDetailResource = vendorResource.addResource("{vId}", {
+      defaultIntegration: fetchPartnerDetailApi,
+    });
+    vendorDetailResource.addMethod("GET");
   }
 }
