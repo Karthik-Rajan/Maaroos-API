@@ -18,11 +18,11 @@ class CardItem extends React.Component {
 	              	  )
 	              	  :""
 	              }
-                  <div className={`favourite-heart position-absolute ${this.props.favIcoIconColor}`}>
-                  	<Link to={this.props.linkUrl}>
-                  		<Icofont icon='heart'/>
-                  	</Link>
-                  </div>
+					{this.props.favIcoIconColor && <div className={`favourite-heart position-absolute ${this.props.favIcoIconColor}`}>
+						<Link to={this.props.linkUrl}>
+							<Icofont icon='heart' />
+						</Link>
+					</div>}
                   {this.props.showPromoted ? (
 	                  <div className="member-plan position-absolute">
 	                  	<Badge variant={this.props.promotedVariant}>Promoted</Badge>
@@ -30,9 +30,12 @@ class CardItem extends React.Component {
 	                  )
                   	  :""
                   }
-                  <Link to={this.props.linkUrl}>
-                  	<Image src={this.props.image} className={this.props.imageClass} alt={this.props.imageAlt} />
-                  </Link>
+					{this.props.imageAlt ?
+						<Link to={this.props.linkUrl}>
+						<Image src={this.props.image} className={this.props.imageClass} alt={this.props.imageAlt} />
+						</Link>
+						:
+						this.props.image}
                </div>
                <div className="p-3 position-relative">
                   <div className="list-card-body">
@@ -74,22 +77,22 @@ class CardItem extends React.Component {
 }
 
 
-CardItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  imageAlt: PropTypes.string,
-  image: PropTypes.string.isRequired,
-  imageClass: PropTypes.string,
-  linkUrl: PropTypes.string.isRequired,
-  offerText: PropTypes.string,
-  offerColor: PropTypes.string,
-  subTitle: PropTypes.string,
-  time: PropTypes.string,
-  price: PropTypes.string,
-  showPromoted: PropTypes.bool,
-  promotedVariant: PropTypes.string,
-  favIcoIconColor: PropTypes.string,
-  rating: PropTypes.string,
-};
+// CardItem.propTypes = {
+//   title: PropTypes.string.isRequired,
+//   imageAlt: PropTypes.string,
+//   image: PropTypes.string.isRequired,
+//   imageClass: PropTypes.string,
+//   linkUrl: PropTypes.string.isRequired,
+//   offerText: PropTypes.string,
+//   offerColor: PropTypes.string,
+//   subTitle: PropTypes.string,
+//   time: PropTypes.string,
+//   price: PropTypes.string,
+//   showPromoted: PropTypes.bool,
+//   promotedVariant: PropTypes.string,
+//   favIcoIconColor: PropTypes.string,
+//   rating: PropTypes.string,
+// };
 CardItem.defaultProps = {
   	imageAlt:'',
     imageClass:'',

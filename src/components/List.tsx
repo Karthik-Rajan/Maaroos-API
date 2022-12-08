@@ -18,24 +18,11 @@ let input = {
   distance: 5,
 };
 
-const callVendorList = async (params: any = {}) => {
-  input = { ...input, ...params };
-
-  return await fetch(BASE_URL + FETCH, {
-    method: "POST",
-    credentials: "same-origin",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(input),
-  });
-};
-
 function List(props: any) {
-  const location = useLocation();
-
   let [list, setList] = useState([]);
+  // let [input, setInput] = useState(data);
+
+  let [loading, setLoading] = useState(true);
 
   let { lat, lng } = props.location.coordinates;
   let locName = props.location.name;
@@ -47,9 +34,38 @@ function List(props: any) {
       })
       .then((data) => {
         setList(data);
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const onFilter = (params: any) => {
+    // setInput({ ...input, ...params });
+    callVendorList({ ...input, ...params })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setList(data);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const callVendorList = async (params: any = {}) => {
+    setLoading(true);
+    input = { ...input, ...params };
+
+    return await fetch(BASE_URL + FETCH, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input),
+    });
+  };
 
   return (
     <>
@@ -67,11 +83,11 @@ function List(props: any) {
           <SideBarTitle />
           <Row>
             <Col md={3}>
-              <SideBarFilter filterList={list} />
+              <SideBarFilter filterList={list} onFilter={onFilter} />
             </Col>
             <Col md={9}>
               <CategoriesCarousel />
-              <ProductItems products={list} />
+              <ProductItems products={list} loading={loading} />
             </Col>
           </Row>
         </Container>

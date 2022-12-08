@@ -3,7 +3,7 @@ import * as lambda from "@aws-cdk/aws-lambda";
 import * as apigw from "@aws-cdk/aws-apigateway";
 import * as iam from "@aws-cdk/aws-iam";
 import CustomProps from "../utils/CustomProps";
-import * as path from "path";
+import { restParams, lambdaProps } from "../utils/helper";
 
 export class ApiStack extends cdk.Stack {
   public fetchPartnerLambda: lambda.Function;
@@ -12,47 +12,10 @@ export class ApiStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: CustomProps) {
     super(scope, id, props);
 
-    const restParams: any = {
-      proxy: false,
-      deploy: true,
-      deployOptions: {
-        stageName: "development",
-      },
-      //set up CORS
-      defaultCorsPreflightOptions: {
-        allowHeaders: [
-          "Content-Type",
-          "X-Amz-Date",
-          "Authorization",
-          "X-Api-Key",
-          "X-Amz-Security-Token",
-          "Origin",
-          "X-Requested-With",
-          "Accept",
-          "x-client-key",
-          "x-client-token",
-          "x-client-secret",
-        ],
-        allowMethods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
-        allowCredentials: true,
-        allowOrigins: [
-          "http://localhost:3000",
-          "http://localhost:3001",
-          "http://localhost:3002",
-        ],
-      },
-    };
-
     //Lambda
     const fetchPartnerRole = new iam.Role(this, "fetchPartners", {
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
     });
-
-    const lambdaProps: any = {
-      runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset("lambda/build"),
-      role: fetchPartnerRole,
-    };
 
     fetchPartnerRole.addManagedPolicy(
       iam.ManagedPolicy.fromAwsManagedPolicyName("AWSLambdaExecute")
@@ -60,7 +23,8 @@ export class ApiStack extends cdk.Stack {
 
     // Fetch Vendor API
     this.fetchPartnerLambda = new lambda.Function(this, "fetchPartner", {
-      ...lambdaProps,
+      ...lambdaProps(lambda, fetchPartnerRole),
+      // entry: path.join(__dirname, `../lambda/build/fetchpartner.js`),
       handler: "fetchpartner.handler",
     });
 
@@ -75,7 +39,8 @@ export class ApiStack extends cdk.Stack {
       this,
       "fetchPartnerDetail",
       {
-        ...lambdaProps,
+        ...lambdaProps(lambda, fetchPartnerRole),
+        // entry: path.join(__dirname, `../lambda/build/fetchPartnerDetail.js`),
         handler: "fetchPartnerDetail.handler",
       }
     );

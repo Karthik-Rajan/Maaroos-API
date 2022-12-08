@@ -31,9 +31,9 @@ const DistanceSlider = (props: any) => {
   }
 
   const defaultFilterValues = {
-    type: "ALL",
+    is_veg: "NO",
     distance: 5,
-    rating: 3,
+    rating_avg: 0,
   };
 
   const [filterValues, setFilterValues] = useState(defaultFilterValues);
@@ -46,14 +46,14 @@ const DistanceSlider = (props: any) => {
   };
 
   const onTypeChangeHandler = (event: any) => {
-    let type = event.target.checked ? "VEG" : "ALL";
-    setFilterValues({ ...filterValues, type });
-    props.onFilter({ ...filterValues, type });
+    let is_veg = event.target.checked ? "YES" : "NO";
+    setFilterValues({ ...filterValues, is_veg });
+    props.onFilter({ ...filterValues, is_veg });
   };
 
   const handleRatingChange = (event: any, newValue: any) => {
-    setFilterValues({ ...filterValues, rating: newValue });
-    props.onFilter({ ...filterValues, rating: newValue });
+    setFilterValues({ ...filterValues, rating_avg: newValue });
+    props.onFilter({ ...filterValues, rating_avg: newValue });
   };
 
   return (
@@ -92,8 +92,8 @@ const DistanceSlider = (props: any) => {
         <Typography>By Rating</Typography>
         <Rating
           name="simple-controlled"
-          defaultValue={defaultFilterValues.rating}
-          value={filterValues.rating}
+          defaultValue={defaultFilterValues.rating_avg}
+          value={filterValues.rating_avg}
           onChange={handleRatingChange}
         />
       </Box>

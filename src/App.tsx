@@ -1,5 +1,7 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+import dotenv from "dotenv";
+
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Index from "./components/Index";
@@ -18,8 +20,10 @@ import Detail from "./components/Detail";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
 import "react-select2-wrapper/css/select2.css";
+import "react-loading-skeleton/dist/skeleton.css";
 import "./App.css";
 
+dotenv.config();
 function App() {
   const location = useLocation();
   return (

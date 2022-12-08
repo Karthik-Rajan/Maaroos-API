@@ -30,7 +30,10 @@ const SideBarFilter = (props: any) => {
               </div>
               <Accordion.Collapse eventKey="0">
                 <div className="filters-card-body card-shop-filters">
-                  <DistanceSlider onFilter={props.filterList} />
+                  <DistanceSlider
+                    filterList={props.filterList}
+                    onFilter={props.onFilter}
+                  />
                 </div>
               </Accordion.Collapse>
             </div>

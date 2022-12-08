@@ -12,7 +12,9 @@ function TopSearch() {
           <Col md={10}>
             <div className="homepage-search-title">
               <h1 className="mb-2 font-weight-normal">
-                <span className="font-weight-bold">Find Best Food Proider</span>{" "}
+                <span className="font-weight-bold">
+                  Find Best Food Provider
+                </span>{" "}
                 in Your Local
               </h1>
               <h5 className="mb-5 text-secondary font-weight-normal">

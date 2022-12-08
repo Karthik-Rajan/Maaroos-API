@@ -13,12 +13,14 @@ const SearchBar = (props: any) => {
 
   Geocode.setApiKey("AIzaSyBhVIXKdp4FXoHLxNqKoPHpjZQk7sc0-pI");
 
-  Geocode.setLocationType("ROOFTOP");
+  //ROOFTOP, RANGE_INTERPOLATED, GEOMETRIC_CENTER, APPROXIMATE
+  Geocode.setLocationType("APPROXIMATE");
 
   const navigate = useNavigate();
 
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(props?.location?.name || "");
   const [coordinates, setCoordinates] = useState({});
+  const [pageUrl, setPageUrl] = useState("listing");
 
   const { ref } = usePlacesWidget({
     apiKey: `AIzaSyBhVIXKdp4FXoHLxNqKoPHpjZQk7sc0-pI`,
@@ -30,6 +32,13 @@ const SearchBar = (props: any) => {
       componentRestrictions: { country: "in" },
     },
   });
+
+  useEffect(() => {
+    if (window.location.pathname == "/listing") {
+      console.log(window.location.pathname);
+      setPageUrl("");
+    }
+  }, []);
 
   const fetchAddress = (response: any) => {
     let city, state, locality, country;
@@ -82,10 +91,13 @@ const SearchBar = (props: any) => {
 
   const onSearch = () => {
     const state = { location: { coordinates, name: location } };
+
     props.dispatch({ type: "LOCATION", payload: state });
-    console.log("OnSearch", state);
-    navigate("/listing");
   };
+
+  // useEffect(() => {
+  //   setLocation(props?.location?.name);
+  // }, []);
 
   return (
     <div className="homepage-search-form">
@@ -126,7 +138,7 @@ const SearchBar = (props: any) => {
           </Form.Group>
           <Form.Group className="col-lg-2 col-md-2 col-sm-12">
             <Link
-              to="listing"
+              to={pageUrl}
               className="btn btn-primary btn-block btn-lg btn-gradient"
               onClick={onSearch}
             >

@@ -4,6 +4,7 @@ import { response } from "../utils/helper";
 
 export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
   let body: any = event.body;
+  console.log("body", body);
   let { rating_avg, distance, is_veg, lat, lng, limit } = JSON.parse(body);
 
   limit = limit ? limit : 10;
@@ -14,7 +15,7 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
     status: "ACTIVE",
   };
 
-  if (rating_avg > 0) {
+  if (rating_avg >= 0) {
     where.rating_avg = {
       [Op.gte]: rating_avg,
     };
