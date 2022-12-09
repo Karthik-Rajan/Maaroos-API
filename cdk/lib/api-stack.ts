@@ -1,63 +1,43 @@
 import * as cdk from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
-import * as apigw from "@aws-cdk/aws-apigateway";
-import * as iam from "@aws-cdk/aws-iam";
 import CustomProps from "../utils/CustomProps";
-import { restParams, lambdaProps } from "../utils/helper";
+import { fetchPartnerApi, fetchPartnerDetailApi } from "./integrations/vendor";
+import { postSignUpConfirmation } from "./integrations/auth";
+import { fetchUserApi } from "./integrations/user";
+import { lambdaRole } from "./integrations/base";
+import vendor_R from "./routes/vendor";
+import userProfile_R from "./routes/user";
+import { Integration, LambdaIntegration } from "@aws-cdk/aws-apigateway";
 
 export class ApiStack extends cdk.Stack {
-  public fetchPartnerLambda: lambda.Function;
-  public fetchPartnerDetailLambda: lambda.Function;
-
   constructor(scope: cdk.App, id: string, props?: CustomProps) {
     super(scope, id, props);
 
-    //Lambda
-    const fetchPartnerRole = new iam.Role(this, "fetchPartners", {
-      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-    });
+    /** Roles */
+    let role = lambdaRole(this);
 
-    fetchPartnerRole.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName("AWSLambdaExecute")
-    );
+    /** Lambdas */
+    postSignUpConfirmation(this, role);
 
-    // Fetch Vendor API
-    this.fetchPartnerLambda = new lambda.Function(this, "fetchPartner", {
-      ...lambdaProps(lambda, fetchPartnerRole),
-      // entry: path.join(__dirname, `../lambda/build/fetchpartner.js`),
-      handler: "fetchpartner.handler",
-    });
+    /** API Integrations */
+    let fetchPartner_I = fetchPartnerApi(this, role);
 
-    const fetchPartnerApi = new apigw.LambdaRestApi(this, "fetch", {
-      description: "fetch-vendors",
-      handler: this.fetchPartnerLambda,
-      ...restParams,
-    });
+    let fetchPartnerDetail_I = fetchPartnerDetailApi(this, role);
 
-    // Fetch Vendor Detail
-    this.fetchPartnerDetailLambda = new lambda.Function(
-      this,
-      "fetchPartnerDetail",
-      {
-        ...lambdaProps(lambda, fetchPartnerRole),
-        // entry: path.join(__dirname, `../lambda/build/fetchPartnerDetail.js`),
-        handler: "fetchPartnerDetail.handler",
-      }
-    );
+    let fetchUser_I = fetchUserApi(this, role);
 
-    const fetchPartnerDetailApi = new apigw.LambdaIntegration(
-      this.fetchPartnerDetailLambda
-    );
+    /** Routes */
+    let vendorIntegrations = {
+      list: fetchPartner_I,
+      vId: fetchPartnerDetail_I,
+    };
+    //Vendor
+    vendor_R(this, vendorIntegrations);
 
-    // POST /vendor/list
-    let vendorResource = fetchPartnerApi.root.addResource("vendor");
-    let vendorListResource = vendorResource.addResource("list");
-    vendorListResource.addMethod("POST");
-
-    // GET /vendor/{vId}
-    let vendorDetailResource = vendorResource.addResource("{vId}", {
-      defaultIntegration: fetchPartnerDetailApi,
-    });
-    vendorDetailResource.addMethod("GET");
+    //User
+    let userIntegrations = {
+      userSub: fetchUser_I,
+    };
+    userProfile_R(this, userIntegrations);
   }
 }

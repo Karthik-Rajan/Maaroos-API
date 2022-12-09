@@ -7,10 +7,17 @@ const User = sequelize.define(
     first_name: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: "Noname",
     },
     second_name: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: "Noname",
+    },
+    uuid: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
     mobile: {
       type: DataTypes.STRING,
