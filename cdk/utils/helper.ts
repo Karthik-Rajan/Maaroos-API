@@ -13,7 +13,7 @@ export const restParams: any = {
   proxy: false,
   deploy: true,
   deployOptions: {
-    stageName: "development",
+    stageName: "prod",
   },
   //set up CORS
   defaultCorsPreflightOptions: {

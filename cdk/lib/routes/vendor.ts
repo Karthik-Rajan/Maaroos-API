@@ -1,9 +1,6 @@
-import { Integration } from "@aws-cdk/aws-apigateway";
-import * as cdk from "@aws-cdk/core";
-import { rootApi } from "../integrations/base";
+import { RestApi } from "@aws-cdk/aws-apigateway";
 
-const vendor_R = (self: cdk.Stack, vendorIntegrations: any) => {
-  let api = rootApi(self);
+const vendor_R = (api: RestApi, vendorIntegrations: any) => {
   let vendorResource = api.root.addResource("vendor");
   let vendorListResource = vendorResource.addResource("list", {
     defaultIntegration: vendorIntegrations.list,

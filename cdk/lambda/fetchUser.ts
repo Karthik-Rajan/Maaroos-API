@@ -3,9 +3,13 @@ import { User } from "../models";
 import { response } from "../utils/helper";
 
 export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
-  let userSub = event.pathParameters;
+  // let { userSub }: any = event.pathParameters;
 
-  let user = null;
+  console.log(event);
+
+  let userSub = "";
+
+  let user: any = {};
 
   if (userSub) {
     user = await User.findOne({
@@ -15,5 +19,5 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
     });
   }
 
-  response(200, user);
+  return response(200, user);
 };
