@@ -25,7 +25,7 @@ const SearchBar = (props: any) => {
   const { ref } = usePlacesWidget({
     apiKey: `AIzaSyBhVIXKdp4FXoHLxNqKoPHpjZQk7sc0-pI`,
     onPlaceSelected: (place) => {
-      fetchAddress(place);
+      fetchAddress(place, true);
     },
     options: {
       // types: ["(cities)"], //REGIONS
@@ -35,37 +35,53 @@ const SearchBar = (props: any) => {
 
   useEffect(() => {
     if (window.location.pathname == "/listing") {
-      console.log(window.location.pathname);
       setPageUrl("");
     }
   }, []);
 
-  const fetchAddress = (response: any) => {
-    let city, state, locality, country;
-    for (let i = 0; i < response.results[0].address_components.length; i++) {
-      for (
-        let j = 0;
-        j < response.results[0].address_components[i].types.length;
-        j++
-      ) {
-        switch (response.results[0].address_components[i].types[j]) {
+  const fetchAddress = (response: any, isPlaceApi = false) => {
+    let city = "",
+      state = "",
+      locality = "",
+      country = "";
+    let addr = response;
+    if (typeof response.results != "undefined") {
+      addr = response.results[0];
+    }
+    for (let i = 0; i < addr.address_components.length; i++) {
+      for (let j = 0; j < addr.address_components[i].types.length; j++) {
+        switch (addr.address_components[i].types[j]) {
           case "sublocality_level_1":
-            locality = response.results[0].address_components[i].long_name;
+            locality = addr.address_components[i].long_name || "";
             break;
           case "locality":
-            city = response.results[0].address_components[i].long_name;
+            city = addr.address_components[i].long_name || "";
             break;
           case "administrative_area_level_1":
-            state = response.results[0].address_components[i].long_name;
+            state = addr.address_components[i].long_name || "";
             break;
           case "country":
-            country = response.results[0].address_components[i].long_name;
+            country = addr.address_components[i].long_name || "";
             break;
         }
       }
     }
-    setLocation(locality + ", " + city + ", " + state + ", " + country);
-    setCoordinates(response.results[0].geometry.location);
+    setLocation(
+      (locality ? locality + "," : "") +
+        (city ? city + "," : "") +
+        state +
+        ", " +
+        country
+    );
+
+    if (isPlaceApi) {
+      setCoordinates({
+        lat: addr.geometry.location.lat(),
+        lng: addr.geometry.location.lng(),
+      });
+    } else {
+      setCoordinates(addr.geometry.location);
+    }
   };
 
   const onLocateHandler = async () => {
@@ -90,14 +106,8 @@ const SearchBar = (props: any) => {
   };
 
   const onSearch = () => {
-    const state = { location: { coordinates, name: location } };
-
-    props.dispatch({ type: "LOCATION", payload: state });
+    props.dispatch({ type: "LOCATION", payload: coordinates });
   };
-
-  // useEffect(() => {
-  //   setLocation(props?.location?.name);
-  // }, []);
 
   return (
     <div className="homepage-search-form">
@@ -152,9 +162,8 @@ const SearchBar = (props: any) => {
 };
 
 const mapStateToProps = (state: any) => {
-  console.log("Maps", state);
   return {
-    location: { ...state },
+    ...state,
   };
 };
 export default connect(mapStateToProps)(SearchBar);

@@ -29,6 +29,7 @@ export const restParams: any = {
       "x-client-key",
       "x-client-token",
       "x-client-secret",
+      "Authorization",
     ],
     allowMethods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
     allowCredentials: true,

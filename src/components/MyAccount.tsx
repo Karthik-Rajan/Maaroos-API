@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes } from "react-router";
-import { NavLink, Link, BrowserRouter, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { Row, Col, Container, Image } from "react-bootstrap";
 import Offers from "./myaccount/Offers";
 import Orders from "./myaccount/Orders";
@@ -12,18 +11,22 @@ import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
 import awsConfig from "./../awsConfig";
 import TrackOrder from "./TrackOrder";
+// import { BASE_URL, ME } from "../constants/user";
+import { connect } from "react-redux";
 
-const MyAccount = () => {
+const MyAccount = (props: any) => {
   Amplify.configure(awsConfig);
   let navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  // useEffect(() => {
-  //   Auth.currentUserInfo()
-  //     .then((res) => setUser(res))
-  //     .catch((err) => {
-  //       navigate("/");
-  //     });
-  // });
+  const [user, setUser] = useState<any>({});
+  const [loading, setLoading] = useState(false);
+
+  props.user.then((data: any) => {
+    setUser(data.userData);
+  });
+
+  useEffect(() => {
+    props.dispatch({ type: "USER_PROFILE_FETCH", payload: {} });
+  }, []);
 
   const [showEditProfile, setShowEditProfile] = useState(false);
 
@@ -51,9 +54,11 @@ const MyAccount = () => {
                         alt="gurdeep singh osahan"
                       />
                       <div className="osahan-user-media-body">
-                        <h6 className="mb-2">Gurdeep Singh</h6>
-                        <p className="mb-1">+91 85680-79956</p>
-                        <p>iamosahan@gmail.com</p>
+                        <h6 className="mb-2">
+                          {user?.first_name + " " + user?.second_name}
+                        </h6>
+                        <p className="mb-1">{user?.mobile}</p>
+                        <p>{user?.email || "No email address configured"}</p>
                         <p className="mb-0 text-black font-weight-bold">
                           <Link
                             to="#"
@@ -168,4 +173,9 @@ const MyAccount = () => {
   );
 };
 
-export default MyAccount;
+function mapStateToProps(state: any) {
+  return {
+    ...state,
+  };
+}
+export default connect(mapStateToProps)(MyAccount);

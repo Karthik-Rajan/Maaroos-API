@@ -80,6 +80,10 @@ const LoginModal = (props: any) => {
   const logIn = (mobile: any, password: any) => {
     Auth.signIn(mobile.replace("+", ""), password)
       .then((result) => {
+        localStorage.setItem(
+          "userIdToken",
+          result.signInUserSession.idToken.jwtToken
+        );
         setInfo(SIGNEDIN);
         window.location.reload();
       })

@@ -1,6 +1,6 @@
 {
   "app": "npx ts-node --prefer-ts-exts bin/cdk.ts",
-  "build": "esbuild lambda/*.ts --bundle --platform=node --target=node14 --external:aws-sdk --outdir=lambda/build",
+  "build": "esbuild lambda/*.ts --bundle --platform=node --target=node14 --external:aws-sdk --outdir=lambda/build && cd ../ && npm run build",
   "watch": {
     "include": [
       "**"

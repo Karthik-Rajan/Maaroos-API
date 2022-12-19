@@ -22,6 +22,7 @@ import "font-awesome/css/font-awesome.min.css";
 import "react-select2-wrapper/css/select2.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import "./App.css";
+import Auth from "@aws-amplify/auth";
 
 dotenv.config();
 function App() {
@@ -35,19 +36,20 @@ function App() {
       )}
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/offers" element={<Offers />} />
         <Route path="/listing" element={<List />} />
-        <Route path="/myaccount" element={<MyAccount />} />
         <Route path="/404" element={<NotFound />} />
         <Route path="/extra" element={<Extra />} />
         <Route path="/auth" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/listing/:vId/detail" element={<Detail />} />
+        <Route element={<NotFound />} />
+        /** Auth */
+        <Route path="/myaccount" element={<MyAccount />} />
         <Route path="/track-order" element={<TrackOrder />} />
         <Route path="/invoice" element={<Invoice />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/thanks" element={<Thanks />} />
-        <Route path="/listing/:vId/detail" element={<Detail />} />
-        <Route element={<NotFound />} />
+        <Route path="/offers" element={<Offers />} />
       </Routes>
       {location.pathname !== "/auth" && location.pathname !== "/register" ? (
         <Footer />

@@ -18,7 +18,7 @@ import Auth from "@aws-amplify/auth";
 import awsConfig from "../../awsConfig";
 import LoginModal from "../modals/LoginModal";
 
-function Header() {
+function Header(props: any) {
   Amplify.configure(awsConfig);
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(false);
@@ -27,7 +27,6 @@ function Header() {
 
   useEffect(() => {
     Auth.currentUserInfo().then((res) => {
-      console.log(res);
       setUser(res);
     });
   }, []);

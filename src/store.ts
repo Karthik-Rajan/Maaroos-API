@@ -1,7 +1,13 @@
-import { createStore, compose } from "redux";
+import { combineReducers, createStore, compose } from "redux";
 
-import reducer from "./reducers";
+import vendorReducer from "./reducers/vendor";
+import userReducer from "./reducers/user";
 // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(reducer);
+const rootReducer = combineReducers({
+  vendor: vendorReducer,
+  user: userReducer,
+});
+
+const store = createStore(rootReducer);
 export default store;

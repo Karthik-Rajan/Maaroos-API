@@ -9,62 +9,38 @@ import SearchBar from "./common/SearchBar";
 import { BASE_URL, FETCH } from "../constants/vendor";
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { guestHeaders, methodProps } from "../constants/apis";
 
 let input = {
-  lat: "28.6261",
-  lng: "79.821602",
-  is_veg: "NO",
-  rating_avg: 0,
-  distance: 5,
+  lat: 0,
+  lng: 0,
 };
 
 function List(props: any) {
   let [list, setList] = useState([]);
-  // let [input, setInput] = useState(data);
 
   let [loading, setLoading] = useState(true);
 
-  let { lat, lng } = props.location.coordinates;
-  let locName = props.location.name;
+  let lat = 0,
+    lng = 0;
 
-  useEffect(() => {
-    callVendorList({ lat, lng })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setList(data);
-        setLoading(false);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  props.vendor.then((res: any) => {
+    lat = res.location.lat;
+    lng = res.location.lng;
+    setList(res.list);
+    setLoading(false);
+    input = res.search;
+  });
 
   const onFilter = (params: any) => {
-    // setInput({ ...input, ...params });
-    callVendorList({ ...input, ...params })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setList(data);
-        setLoading(false);
-      })
-      .catch((err) => console.log(err));
+    callVendorList({ ...params });
   };
 
   const callVendorList = async (params: any = {}) => {
     setLoading(true);
     input = { ...input, ...params };
 
-    return await fetch(BASE_URL + FETCH, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(input),
-    });
+    props.dispatch({ type: "LOCATION", payload: input });
   };
 
   return (

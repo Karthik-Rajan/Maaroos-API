@@ -23,6 +23,7 @@ import Review from "./common/Review";
 import Icofont from "react-icofont";
 import { BASE_URL, DETAIL } from "../constants/vendor";
 import { connect } from "react-redux";
+import { guestHeaders, methodProps } from "../constants/apis";
 
 const Detail = (props: any) => {
   let { vId } = useParams();
@@ -36,12 +37,8 @@ const Detail = (props: any) => {
 
   const callDetailApi = async (params: any = {}) => {
     return await fetch(BASE_URL + DETAIL + vId, {
-      method: "GET",
-      credentials: "same-origin",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      ...methodProps("GET"),
+      ...guestHeaders,
     });
   };
 
@@ -51,7 +48,6 @@ const Detail = (props: any) => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         setDetail(data);
         reviewUser.push({
           name: data.first_name,
@@ -834,7 +830,7 @@ const Detail = (props: any) => {
 
 function mapStateToProps(state: any) {
   return {
-    ...state,
+    ...state.vendor.vendorDetail,
   };
 }
 export default connect(mapStateToProps)(Detail);
