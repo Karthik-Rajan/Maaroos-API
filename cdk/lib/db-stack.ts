@@ -12,25 +12,10 @@ export class DbStack extends cdk.Stack {
 
     const vpc = new ec2.Vpc(this, "maaroos-db-vpc", {
       cidr: "172.31.0.0/16",
-      natGateways: 1,
-      maxAzs: 2,
-      subnetConfiguration: [
-        {
-          name: "maaroos-db-vpc-subnet-1",
-          subnetType: ec2.SubnetType.PUBLIC,
-          cidrMask: 24,
-        },
-        {
-          name: "maaroos-db-vpc-subnet-2",
-          subnetType: ec2.SubnetType.PRIVATE_WITH_NAT,
-          cidrMask: 24,
-        },
-        {
-          name: "maaroos-db-vpc-subnet-3",
-          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-          cidrMask: 24,
-        },
-      ],
+    });
+
+    const securityGroups = new ec2.SecurityGroup(this, "maaroos-db-sg", {
+      vpc: vpc,
     });
 
     // 👇 create RDS instance
@@ -43,9 +28,14 @@ export class DbStack extends cdk.Stack {
       credentials: rds.Credentials.fromUsername("admin", {
         password: cdk.SecretValue.unsafePlainText("630561Svg"),
       }),
+      instanceType: ec2.InstanceType.of(
+        //Free Tire
+        ec2.InstanceClass.T3,
+        ec2.InstanceSize.MICRO
+      ),
+      securityGroups: [],
       multiAz: false,
       allocatedStorage: 20,
-      maxAllocatedStorage: 20,
       allowMajorVersionUpgrade: false,
       autoMinorVersionUpgrade: true,
       backupRetention: cdk.Duration.days(0),
