@@ -3,44 +3,63 @@ import _ from "lodash";
 import { Row, Col, Container } from "react-bootstrap";
 import CategoriesCarousel from "./common/CategoriesCarousel";
 import ProductItems from "./common/ProductItems";
-import SideBarTitle from "./common/SideBarTitle";
+import SideBarHead from "./common/SideBarHead";
 import SideBarFilter from "./common/SideBarFilter";
 import SearchBar from "./common/SearchBar";
-import { BASE_URL, FETCH } from "../constants/vendor";
 import { connect } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { guestHeaders, methodProps } from "../constants/apis";
 
 let input = {
   lat: 0,
   lng: 0,
 };
 
+let location = {};
+
 function List(props: any) {
   let [list, setList] = useState([]);
-
+  let [sideBar, setSideBar] = useState(true);
   let [loading, setLoading] = useState(true);
-
-  let lat = 0,
-    lng = 0;
-
-  props.vendor.then((res: any) => {
-    lat = res.location.lat;
-    lng = res.location.lng;
-    setList(res.list);
-    setLoading(false);
-    input = res.search;
-  });
+  let [listCardClassName, setListCardClassName] = useState("productsListing");
+  useEffect(() => {
+    props.vendor
+      .then((res: any) => {
+        setList(res.list);
+        setLoading(false);
+        input = res.search;
+        location = res.location;
+      })
+      .catch((err: any) => {
+        console.log("Error on Listing Page", err);
+        setList([]);
+        setLoading(false);
+      });
+  }, [props.vendor]);
 
   const onFilter = (params: any) => {
+    console.log("onFilter", params);
     callVendorList({ ...params });
   };
 
   const callVendorList = async (params: any = {}) => {
     setLoading(true);
+
     input = { ...input, ...params };
 
-    props.dispatch({ type: "LOCATION", payload: input });
+    props.dispatch({
+      type: "LOCATION",
+      payload: { search: input, location },
+    });
+  };
+
+  const toggleSideBar = (value: boolean) => {
+    if (!sideBar == value) {
+      setListCardClassName(
+        listCardClassName == "productsListing"
+          ? "productsListingW75"
+          : "productsListing"
+      );
+      setSideBar(value);
+    }
   };
 
   return (
@@ -49,19 +68,31 @@ function List(props: any) {
         title="Offers Near You"
         subTitle="Best deals at your favourite restaurants"
       /> */}
-      <section className="section pt-5 searchBarSection">
+
+      {/* <section className="section pt-5 searchBarSection">
         <Container>
           <SearchBar />
         </Container>
-      </section>
-      <section className="section pt-5 pb-5 products-listing">
-        <Container>
-          <SideBarTitle />
+      </section> */}
+
+      <section className={`section pt-5 pb-5 ` + listCardClassName}>
+        <Container fluid className="productListingContainer">
+          <SideBarHead
+            onClose={toggleSideBar}
+            listLength={list.length}
+            sideBar={sideBar}
+          />
           <Row>
-            <Col md={3}>
-              <SideBarFilter filterList={list} onFilter={onFilter} />
-            </Col>
-            <Col md={9}>
+            {sideBar && (
+              <Col md={3}>
+                <SideBarFilter
+                  onClose={toggleSideBar}
+                  filterList={list}
+                  onFilter={onFilter}
+                />
+              </Col>
+            )}
+            <Col md={sideBar ? 9 : 12}>
               <CategoriesCarousel />
               <ProductItems products={list} loading={loading} />
             </Col>
@@ -74,7 +105,7 @@ function List(props: any) {
 
 function mapStateToProps(state: any) {
   return {
-    ...state,
+    vendor: state.vendor,
   };
 }
 export default connect(mapStateToProps)(List);

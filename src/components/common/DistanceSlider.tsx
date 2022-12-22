@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 
 import {
   Typography,
@@ -11,6 +12,13 @@ import {
 } from "@mui/material";
 
 const DistanceSlider = (props: any) => {
+  let input = {};
+  useEffect(() => {
+    props.vendor.then((res: any) => {
+      input = res.search;
+    });
+  });
+
   /* Type Switch */
 
   /* Distance Slider */
@@ -36,24 +44,27 @@ const DistanceSlider = (props: any) => {
     rating_avg: 0,
   };
 
-  const [filterValues, setFilterValues] = useState(defaultFilterValues);
+  const [filterValues, setFilterValues] = useState<any>(defaultFilterValues);
 
   const handleDistanceChange = (event: Event, newValue: number | number[]) => {
+    let distance = { ...filterValues, ...input, distance: newValue };
     if (typeof newValue === "number") {
-      setFilterValues({ ...filterValues, distance: newValue });
+      setFilterValues(distance);
     }
-    props.onFilter({ ...filterValues, distance: newValue });
+    props.onFilter({ distance: newValue });
   };
 
   const onTypeChangeHandler = (event: any) => {
     let is_veg = event.target.checked ? "YES" : "NO";
-    setFilterValues({ ...filterValues, is_veg });
-    props.onFilter({ ...filterValues, is_veg });
+    let type = { ...filterValues, ...input, is_veg };
+    setFilterValues(type);
+    props.onFilter({ is_veg: is_veg });
   };
 
   const handleRatingChange = (event: any, newValue: any) => {
-    setFilterValues({ ...filterValues, rating_avg: newValue });
-    props.onFilter({ ...filterValues, rating_avg: newValue });
+    let rating = { ...filterValues, ...input, rating_avg: newValue };
+    setFilterValues(rating);
+    props.onFilter({ rating_avg: newValue });
   };
 
   return (
@@ -100,4 +111,9 @@ const DistanceSlider = (props: any) => {
     </>
   );
 };
-export default DistanceSlider;
+const mapStateToProps = (state: any) => {
+  return {
+    vendor: state.vendor,
+  };
+};
+export default connect(mapStateToProps)(DistanceSlider);

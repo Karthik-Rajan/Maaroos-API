@@ -3,9 +3,9 @@ import { Col } from "react-bootstrap";
 import Skeleton from "@mui/material/Skeleton";
 import CardItem from "../common/CardItem";
 import _ from "lodash";
-const vendorListSkeleton = _.range(9).map((_n: any, i: any) => {
+const vendorListSkeleton = _.range(12).map((_n: any, i: any) => {
   return (
-    <Col md={4} sm={6} key={i} className="mb-4 pb-2">
+    <Col md={3} sm={4} key={i} className="mb-4 pb-2">
       <CardItem
         title={<Skeleton width={20} />}
         subTitle={<Skeleton />}

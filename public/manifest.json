@@ -1,14 +1,19 @@
 {
   "short_name": "MAAROOS",
-  "name": "Maaroos | Online Food Subscription Portal",
+  "name": "Online Food Subscription Portal",
   "icons": [
 	    {
 	      "src": "favicon.ico",
 	      "sizes": "64x64 32x32 24x24 16x16",
 	      "type": "image/x-icon"
 	    },
+      {
+	      "src": "logo_192.png",
+	      "type": "image/png",
+	      "sizes": "192X192"
+	    },
 	    {
-	      "src": "logo_alt_512_alt.png",
+	      "src": "logo_alt_512.png",
 	      "type": "image/png",
 	      "sizes": "512x512"
 	    },
@@ -52,6 +57,7 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#d82926",
-  "background_color": "#ff3524",
-  "primary_color" : "#ff3524"
+  "background_color": "#d82926",
+  "primary_color" : "#d82926",
+  "logo_color" : "#ff3524"
 }

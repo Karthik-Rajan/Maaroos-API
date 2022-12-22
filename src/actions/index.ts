@@ -11,13 +11,13 @@ export const vendorList = async (payload: any) => {
   let vendorData = {};
   const response = {
     type: "LOCATION",
-    search: payload,
-    location: {},
+    search: payload.search,
+    location: payload.location,
     list: vendorData,
   };
 
   return await fetch(BASE_URL + FETCH, {
-    ...methodProps("POST", payload),
+    ...methodProps("POST", payload.search),
     ...guestHeaders,
   })
     .then((res) => {

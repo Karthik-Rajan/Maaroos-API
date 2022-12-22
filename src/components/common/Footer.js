@@ -9,7 +9,7 @@ class Footer extends React.Component {
 	render() {
     	return (
     		<>
-			    <section className="section pt-5 pb-5 text-center bg-white">
+			    {/* <section className="section pt-5 pb-5 text-center bg-white">
 			         <Container>
 			            <Row>
 			               <Col sm={12}>
@@ -17,7 +17,7 @@ class Footer extends React.Component {
 			               </Col>
 			            </Row>
 			         </Container>
-			    </section>
+			    </section> */}
 			    <section className="footer pt-5 pb-5">
 			         <Container>
 			            <Row>

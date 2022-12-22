@@ -11,7 +11,7 @@ const commonState = {
   search: {
     lat: 0,
     lng: 0,
-    avg_rating: 0,
+    rating_avg: 0,
     distance: 5,
     is_veg: "NO",
   },
@@ -29,11 +29,15 @@ const initialState = new Promise((resolve, reject) => {
 function reducer(state = initialState, action: any) {
   switch (action.type) {
     case "LOCATION":
-      return vendorList({ ...commonState.search, ...action.payload }).then(
-        (res: any) => {
-          return res;
-        }
-      );
+      return vendorList({
+        search: {
+          ...commonState.search,
+          ...action.payload.search,
+        },
+        location: action.payload.location,
+      }).then((res: any) => {
+        return res;
+      });
     case "CURRENT_VENDOR":
       return {
         vendor: state,

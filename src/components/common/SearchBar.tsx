@@ -6,7 +6,6 @@ import Icofont from "react-icofont";
 import { Link } from "react-router-dom";
 import { usePlacesWidget } from "react-google-autocomplete";
 import Geocode from "react-geocode";
-import { useNavigate } from "react-router-dom";
 
 const SearchBar = (props: any) => {
   Geocode.setLanguage("en");
@@ -16,11 +15,12 @@ const SearchBar = (props: any) => {
   //ROOFTOP, RANGE_INTERPOLATED, GEOMETRIC_CENTER, APPROXIMATE
   Geocode.setLocationType("APPROXIMATE");
 
-  const navigate = useNavigate();
-
   const [location, setLocation] = useState(props?.location?.name || "");
   const [coordinates, setCoordinates] = useState({});
   const [pageUrl, setPageUrl] = useState("listing");
+  const [quickSearch, setQuickSearch] = useState(true);
+
+  let input = {};
 
   const { ref } = usePlacesWidget({
     apiKey: `AIzaSyBhVIXKdp4FXoHLxNqKoPHpjZQk7sc0-pI`,
@@ -37,7 +37,13 @@ const SearchBar = (props: any) => {
     if (window.location.pathname == "/listing") {
       setPageUrl("");
     }
-  }, []);
+    if (window.location.pathname == "/") {
+      setQuickSearch(false);
+    }
+    props.vendor.then((res: any) => {
+      input = res.search;
+    });
+  });
 
   const fetchAddress = (response: any, isPlaceApi = false) => {
     let city = "",
@@ -106,31 +112,39 @@ const SearchBar = (props: any) => {
   };
 
   const onSearch = () => {
-    props.dispatch({ type: "LOCATION", payload: coordinates });
+    props.dispatch({
+      type: "LOCATION",
+      payload: {
+        search: { ...input, ...coordinates },
+        location: { coordinates, name: location },
+      },
+    });
   };
 
   return (
     <div className="homepage-search-form">
       <Form className="form-noborder">
         <div className="form-row">
-          <Form.Group className="col-lg-3 col-md-3 col-sm-12">
-            <div className="location-dropdown">
-              <Icofont icon="location-arrow" />
-              <Select2
-                className="custom-select"
-                data={[
-                  { text: "Breakfast", id: 1 },
-                  { text: "Lunch", id: 2 },
-                  { text: "Dinner", id: 3 },
-                  { text: "Cafés", id: 4 },
-                  { text: "Delivery", id: 5 },
-                ]}
-                options={{
-                  placeholder: "Quick Searches",
-                }}
-              />
-            </div>
-          </Form.Group>
+          {quickSearch && (
+            <Form.Group className="col-lg-3 col-md-3 col-sm-12">
+              <div className="location-dropdown">
+                <Icofont icon="location-arrow" />
+                <Select2
+                  className="custom-select"
+                  data={[
+                    { text: "Breakfast", id: 1 },
+                    { text: "Lunch", id: 2 },
+                    { text: "Dinner", id: 3 },
+                    { text: "Cafés", id: 4 },
+                    { text: "Delivery", id: 5 },
+                  ]}
+                  options={{
+                    placeholder: "Quick Searches",
+                  }}
+                />
+              </div>
+            </Form.Group>
+          )}
           <Form.Group className="col-lg-7 col-md-7 col-sm-12">
             <Form.Control
               type="text"
@@ -163,7 +177,7 @@ const SearchBar = (props: any) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    ...state,
+    vendor: state.vendor,
   };
 };
 export default connect(mapStateToProps)(SearchBar);

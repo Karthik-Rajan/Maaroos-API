@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Accordion, Button, Form } from "react-bootstrap";
 import Icofont from "react-icofont";
 import { Link } from "react-router-dom";
@@ -7,9 +7,17 @@ import DistanceSlider from "./DistanceSlider";
 const SideBarFilter = (props: any) => {
   return (
     <>
-      <div className="filters shadow-sm rounded bg-white mb-4">
+      <div className="sideBarFilter filters shadow-sm rounded bg-white mb-4">
         <div className="filters-header border-bottom pl-4 pr-4 pt-3 pb-3">
           <h5 className="m-0">Filter By</h5>
+          <span
+            className="close"
+            onClick={() => {
+              props.onClose(false);
+            }}
+          >
+            close
+          </span>
         </div>
         <div className="filters-body">
           <Accordion defaultActiveKey="0">
@@ -340,7 +348,7 @@ const SideBarFilter = (props: any) => {
           </Accordion>
         </div>
       </div>
-      <div className="filters pt-2">
+      {/* <div className="filters pt-2">
         <div className="filters-body rounded shadow-sm bg-white">
           <div className="filters-card p-4">
             <div>
@@ -376,7 +384,7 @@ const SideBarFilter = (props: any) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

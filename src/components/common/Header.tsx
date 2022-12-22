@@ -17,6 +17,7 @@ import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
 import awsConfig from "../../awsConfig";
 import LoginModal from "../modals/LoginModal";
+import SearchBar from "./SearchBar";
 
 function Header(props: any) {
   Amplify.configure(awsConfig);
@@ -67,6 +68,7 @@ function Header(props: any) {
               <Image src="/img/logo.png" alt="Maaroos" className="logoImage" />
             </Navbar.Brand>
             <Navbar.Toggle />
+            {/* <SearchBar /> */}
             <Navbar.Collapse id="navbarNavDropdown">
               <Nav activeKey={0} className="ml-auto" onSelect={onCloseMenu}>
                 <Nav.Link

@@ -10,7 +10,7 @@ const ProductItems = (props: any) => {
     props.products.length &&
       props.products?.forEach((product: any) => {
         products.push(
-          <Col md={4} sm={6} key={product.id} className="mb-4 pb-2">
+          <Col md={3} sm={4} key={product.id} className="mb-4 pb-2">
             <CardItem
               title={product.name}
               subTitle={product.is_veg === "YES" ? "VEG" : "ALL"}
@@ -34,7 +34,7 @@ const ProductItems = (props: any) => {
       products.push(
         <React.Fragment key={1}>
           <Col md={4} sm={6} className="mb-12 pb-2"></Col>
-          <Col md={4} sm={6} className="mb-12 pb-2">
+          <Col md={4} sm={6} className="mb-12 pb-2 centerPadList">
             <h5>No results found</h5>
             <Image src="" />
           </Col>
