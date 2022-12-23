@@ -1,3 +1,4 @@
 import { vendorListSkeleton } from "./vendorListSkeleton";
+import { vendorDetailSkeleton } from "./vendorDetailSkeleton";
 
-export { vendorListSkeleton };
+export { vendorListSkeleton, vendorDetailSkeleton };

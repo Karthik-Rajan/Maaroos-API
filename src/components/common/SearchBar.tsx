@@ -13,7 +13,7 @@ const SearchBar = (props: any) => {
   Geocode.setApiKey("AIzaSyBhVIXKdp4FXoHLxNqKoPHpjZQk7sc0-pI");
 
   //ROOFTOP, RANGE_INTERPOLATED, GEOMETRIC_CENTER, APPROXIMATE
-  Geocode.setLocationType("APPROXIMATE");
+  Geocode.setLocationType("GEOMETRIC_CENTER");
 
   const [location, setLocation] = useState(props?.location?.name || "");
   const [coordinates, setCoordinates] = useState({});
@@ -46,6 +46,7 @@ const SearchBar = (props: any) => {
   });
 
   const fetchAddress = (response: any, isPlaceApi = false) => {
+    console.log("MAP", response);
     let city = "",
       state = "",
       locality = "",

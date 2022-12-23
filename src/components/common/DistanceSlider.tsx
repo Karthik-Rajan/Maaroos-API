@@ -17,7 +17,7 @@ const DistanceSlider = (props: any) => {
     props.vendor.then((res: any) => {
       input = res.search;
     });
-  });
+  }, [props.vendor]);
 
   /* Type Switch */
 
@@ -47,7 +47,10 @@ const DistanceSlider = (props: any) => {
   const [filterValues, setFilterValues] = useState<any>(defaultFilterValues);
 
   const handleDistanceChange = (event: Event, newValue: number | number[]) => {
-    let distance = { ...filterValues, ...input, distance: newValue };
+    let distance = {
+      ...filterValues,
+      ...{ ...input, distance: newValue },
+    };
     if (typeof newValue === "number") {
       setFilterValues(distance);
     }
@@ -56,13 +59,13 @@ const DistanceSlider = (props: any) => {
 
   const onTypeChangeHandler = (event: any) => {
     let is_veg = event.target.checked ? "YES" : "NO";
-    let type = { ...filterValues, ...input, is_veg };
+    let type = { ...filterValues, ...{ ...input, is_veg } };
     setFilterValues(type);
     props.onFilter({ is_veg: is_veg });
   };
 
   const handleRatingChange = (event: any, newValue: any) => {
-    let rating = { ...filterValues, ...input, rating_avg: newValue };
+    let rating = { ...filterValues, ...{ ...input, rating_avg: newValue } };
     setFilterValues(rating);
     props.onFilter({ rating_avg: newValue });
   };

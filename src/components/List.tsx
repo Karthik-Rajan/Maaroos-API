@@ -20,6 +20,7 @@ function List(props: any) {
   let [sideBar, setSideBar] = useState(true);
   let [loading, setLoading] = useState(true);
   let [listCardClassName, setListCardClassName] = useState("productsListing");
+  let [search, setSearch] = useState(input);
   useEffect(() => {
     props.vendor
       .then((res: any) => {
@@ -27,6 +28,7 @@ function List(props: any) {
         setLoading(false);
         input = res.search;
         location = res.location;
+        setSearch({ ...input });
       })
       .catch((err: any) => {
         console.log("Error on Listing Page", err);
@@ -35,15 +37,19 @@ function List(props: any) {
       });
   }, [props.vendor]);
 
-  const onFilter = (params: any) => {
-    console.log("onFilter", params);
-    callVendorList({ ...params });
+  const onApplyFilter = () => {
+    console.log("Filters", search);
+    callVendorList();
   };
 
-  const callVendorList = async (params: any = {}) => {
+  const onFilter = (params: any) => {
+    setSearch({ ...search, ...params });
+  };
+
+  const callVendorList = async () => {
     setLoading(true);
 
-    input = { ...input, ...params };
+    input = { ...input, ...search };
 
     props.dispatch({
       type: "LOCATION",
@@ -60,6 +66,10 @@ function List(props: any) {
       );
       setSideBar(value);
     }
+  };
+
+  const resetFilters = () => {
+    setSearch({ ...search });
   };
 
   return (
@@ -81,6 +91,7 @@ function List(props: any) {
             onClose={toggleSideBar}
             listLength={list.length}
             sideBar={sideBar}
+            search={search}
           />
           <Row>
             {sideBar && (
@@ -89,6 +100,8 @@ function List(props: any) {
                   onClose={toggleSideBar}
                   filterList={list}
                   onFilter={onFilter}
+                  onApply={onApplyFilter}
+                  resetFilters={resetFilters}
                 />
               </Col>
             )}

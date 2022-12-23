@@ -9,9 +9,9 @@ export class WebAppStack extends cdk.Stack {
     super(scope, id, props);
 
     // S3
-    const bucket = new s3.Bucket(this, "maaroosworldweb.com", {
+    const bucket = new s3.Bucket(this, "web.maaroos.com", {
       publicReadAccess: true,
-      bucketName: "maaroos-world-web",
+      bucketName: "web.maaroos.com",
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       websiteIndexDocument: "index.html",
       websiteErrorDocument: "index.html",

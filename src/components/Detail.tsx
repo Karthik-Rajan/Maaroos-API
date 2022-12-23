@@ -24,12 +24,14 @@ import Icofont from "react-icofont";
 import { BASE_URL, DETAIL } from "../constants/vendor";
 import { connect } from "react-redux";
 import { guestHeaders, methodProps } from "../constants/apis";
+import { vendorDetailSkeleton } from "./skeletons";
 
 const Detail = (props: any) => {
   let { vId } = useParams();
 
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [detail, setDetail] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const reviewUser = [];
 
@@ -54,8 +56,12 @@ const Detail = (props: any) => {
           image: data.profile_img,
           url: "#",
         });
+        setIsLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+      });
   }, []);
 
   const hideAddressModal = () => setShowAddressModal(false);
@@ -70,7 +76,8 @@ const Detail = (props: any) => {
 
   return (
     <>
-      {detail && (
+      {isLoading && vendorDetailSkeleton}
+      {!isLoading && detail && (
         <div>
           <section className="restaurant-detailed-banner">
             <div className="text-center">

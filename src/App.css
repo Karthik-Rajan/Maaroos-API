@@ -555,8 +555,21 @@ small {
   text-decoration: underline !important;
   cursor: pointer;
 }
+.applyFilterBtn{
+  width: 100%;
+  margin-top : 15px;
+}
 .sideBarFilter .close{
   float: right;
+  margin-top: -19px;
+  font-size: 14px;
+  color: red;
+  cursor: pointer;
+  text-decoration: underline !important;
+}
+.sideBarFilter .reset{
+  float: right;
+  margin-right: 10px;
   margin-top: -19px;
   font-size: 14px;
   color: red;

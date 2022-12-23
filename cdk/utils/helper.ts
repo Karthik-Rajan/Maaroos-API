@@ -38,6 +38,8 @@ export const restParams: any = {
       "http://localhost:3001",
       "http://localhost:3002",
       "http://maaroos-world-web.s3-website.ap-south-1.amazonaws.com",
+      "http://web.maaroos.com",
+      "https://web.maaroos.com",
     ],
   },
 };

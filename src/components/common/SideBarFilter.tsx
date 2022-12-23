@@ -11,6 +11,14 @@ const SideBarFilter = (props: any) => {
         <div className="filters-header border-bottom pl-4 pr-4 pt-3 pb-3">
           <h5 className="m-0">Filter By</h5>
           <span
+            className="reset"
+            onClick={() => {
+              props.resetFilters();
+            }}
+          >
+            reset
+          </span>
+          <span
             className="close"
             onClick={() => {
               props.onClose(false);
@@ -18,6 +26,13 @@ const SideBarFilter = (props: any) => {
           >
             close
           </span>
+          <button
+            type="button"
+            className="btn btn-primary applyFilterBtn"
+            onClick={props.onApply}
+          >
+            Apply
+          </button>
         </div>
         <div className="filters-body">
           <Accordion defaultActiveKey="0">
@@ -346,6 +361,15 @@ const SideBarFilter = (props: any) => {
               </Accordion.Collapse>
             </div>
           </Accordion>
+        </div>
+        <div className="filters-footer border-bottom pl-4 pr-4 pt-3 pb-3">
+          <button
+            type="button"
+            className="btn btn-primary applyFilterBtn"
+            onClick={props.onApply}
+          >
+            Apply
+          </button>
         </div>
       </div>
       {/* <div className="filters pt-2">
