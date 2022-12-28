@@ -1,0 +1,32 @@
+{
+  "name": "maaroos-world",
+  "version": "0.3.0",
+  "bin": {
+    "cdk": "bin/cdk.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.103",
+    "@types/jest": "^26.0.10",
+    "@types/node": "^16.11.41",
+    "aws-cdk": "2.10.0",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-apigateway": "^1.159.0",
+    "@aws-cdk/aws-cloudfront": "^1.171.0",
+    "@aws-cdk/aws-s3": "^1.171.0",
+    "@aws-cdk/aws-s3-deployment": "^1.171.0",
+    "aws-lambda": "^1.0.7",
+    "esbuild": "^0.15.7",
+    "mysql2": "^2.3.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.25.7",
+    "source-map-support": "^0.5.16"
+  }
+}
