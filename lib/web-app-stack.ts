@@ -19,7 +19,7 @@ export class WebAppStack extends cdk.Stack {
 
     // Deployment
     const src = new s3Deploy.BucketDeployment(this, "Maaroos-Web-Deploy", {
-      sources: [s3Deploy.Source.asset("../build")],
+      sources: [s3Deploy.Source.asset("../web/build")],
       destinationBucket: bucket,
     });
 

@@ -1,5 +1,5 @@
 {
-  "name": "maaroos-world",
+  "name": "maaroos-api",
   "version": "0.3.0",
   "bin": {
     "cdk": "bin/cdk.js"
@@ -15,11 +15,14 @@
     "@types/jest": "^26.0.10",
     "@types/node": "^16.11.41",
     "aws-cdk": "2.10.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.4"
   },
   "dependencies": {
     "@aws-cdk/aws-apigateway": "^1.159.0",
     "@aws-cdk/aws-cloudfront": "^1.171.0",
+    "@aws-cdk/aws-lambda-nodejs": "^1.186.0",
+    "@aws-cdk/aws-rds": "^1.181.0",
+    "@aws-cdk/aws-route53-targets": "^1.188.0",
     "@aws-cdk/aws-s3": "^1.171.0",
     "@aws-cdk/aws-s3-deployment": "^1.171.0",
     "aws-lambda": "^1.0.7",
@@ -27,6 +30,7 @@
     "mysql2": "^2.3.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.25.7",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "^0.5.16",
+    "ts-md5": "^1.3.1"
   }
 }

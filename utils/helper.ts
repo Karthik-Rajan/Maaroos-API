@@ -1,10 +1,22 @@
-export const response = (code: number, result: any) => {
+import * as path from "path";
+import { Md5 } from "ts-md5";
+
+export const response = (code: number, result: any, hash: object = {}) => {
+  let headers = {};
+
+  if (hash) {
+    headers = { ETag: Md5.hashStr(JSON.stringify(hash)) };
+  }
+
   return {
     statusCode: code,
     body: JSON.stringify(result ? result : {}),
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
+      "Cache-Control": `max-age=31536000, no-cache`,
+      Vary: "ETag, Content-Encoding",
+      ...headers,
     },
   };
 };
@@ -35,19 +47,23 @@ export const restParams: any = {
     allowCredentials: true,
     allowOrigins: [
       "http://localhost:3000",
-      "http://localhost:3001",
-      "http://localhost:3002",
-      "http://maaroos-world-web.s3-website.ap-south-1.amazonaws.com",
       "http://web.maaroos.com",
       "https://web.maaroos.com",
     ],
   },
 };
 
-export const lambdaProps: any = (lambda: any, role: any) => {
+export const lambdaFuncProps: any = (lambda: any, role: any) => {
   return {
     runtime: lambda.Runtime.NODEJS_14_X,
     code: lambda.Code.fromAsset("lambda/build"),
+    role,
+  };
+};
+
+export const lambdaProps: any = (fileName: string, role: any) => {
+  return {
+    entry: path.join(__dirname + "/../lambda/", fileName),
     role,
   };
 };

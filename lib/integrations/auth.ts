@@ -1,13 +1,13 @@
 import * as cdk from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
-import { lambdaProps } from "../../utils/helper";
+import { lambdaFuncProps } from "../../utils/helper";
 
 export const postSignUpConfirmation = (
   self: cdk.Stack,
   role: void
 ): lambda.Function =>
   new lambda.Function(self, "postSignUpConfirmation", {
-    ...lambdaProps(lambda, role),
+    ...lambdaFuncProps(lambda, role),
     handler: "postSignUpConfirmation.handler",
   });
 
@@ -16,7 +16,7 @@ export const createAuthChallenge = (
   role: void
 ): lambda.Function =>
   new lambda.Function(self, "createAuth", {
-    ...lambdaProps(lambda, role),
+    ...lambdaFuncProps(lambda, role),
     handler: "createAuth.handler",
   });
 
@@ -25,7 +25,7 @@ export const defineAuthChallenge = (
   role: void
 ): lambda.Function =>
   new lambda.Function(self, "defineAuth", {
-    ...lambdaProps(lambda, role),
+    ...lambdaFuncProps(lambda, role),
     handler: "defineAuth.handler",
   });
 
@@ -34,6 +34,6 @@ export const verifyAuthChallenge = (
   role: void
 ): lambda.Function =>
   new lambda.Function(self, "verifyAuth", {
-    ...lambdaProps(lambda, role),
+    ...lambdaFuncProps(lambda, role),
     handler: "verifyAuth.handler",
   });

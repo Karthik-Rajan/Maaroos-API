@@ -1,39 +1,20 @@
-import * as cdk from "@aws-cdk/core";
-import * as lambda from "@aws-cdk/aws-lambda";
-import * as apigw from "@aws-cdk/aws-apigateway";
-import * as iam from "@aws-cdk/aws-iam";
+import * as lambda from "@aws-cdk/aws-lambda-nodejs";
 import { lambdaProps } from "../../utils/helper";
 
 /** Vendor List */
-
 export const fetchPartnerLambda = (
-  self: cdk.Stack,
+  self: any,
   role: void
-): lambda.Function =>
-  new lambda.Function(self, "fetchPartner", {
-    ...lambdaProps(lambda, role),
-    handler: "fetchpartner.handler",
+): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "fetchPartner", {
+    ...lambdaProps(`fetchPartner.ts`, role),
   });
-
-export const fetchPartnerApi = (
-  self: cdk.Stack,
-  role: void
-): apigw.LambdaIntegration =>
-  new apigw.LambdaIntegration(fetchPartnerLambda(self, role));
 
 /** Vendor Detail */
-
 export const fetchPartnerDetailLambda = (
-  self: cdk.Stack,
+  self: any,
   role: void
-): lambda.Function =>
-  new lambda.Function(self, "fetchPartnerDetail", {
-    ...lambdaProps(lambda, role),
-    handler: "fetchPartnerDetail.handler",
+): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "fetchPartnerDetail", {
+    ...lambdaProps(`fetchPartnerDetail.ts`, role),
   });
-
-export const fetchPartnerDetailApi = (
-  self: cdk.Stack,
-  role: void
-): apigw.LambdaIntegration =>
-  new apigw.LambdaIntegration(fetchPartnerDetailLambda(self, role));

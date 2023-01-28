@@ -7,7 +7,6 @@ import {
   verifyAuthChallenge,
 } from "./integrations/auth";
 import * as cognito from "@aws-cdk/aws-cognito";
-import * as apigateway from "@aws-cdk/aws-apigateway";
 import { lambdaRole } from "./integrations/base";
 
 export class AuthStack extends cdk.Stack {
@@ -46,6 +45,13 @@ export class AuthStack extends cdk.Stack {
         defineAuthChallenge: defineAuth,
         postConfirmation: postConfirmAuth,
         verifyAuthChallengeResponse: verifyAuth,
+      },
+      passwordPolicy: {
+        minLength: 8,
+        requireLowercase: true,
+        requireDigits: true,
+        requireUppercase: false,
+        requireSymbols: true,
       },
     });
 

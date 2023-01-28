@@ -6,10 +6,7 @@ const userProfile_R = (
   auth: apigw.CognitoUserPoolsAuthorizer
 ) => {
   let userResource = api.root.addResource("me");
-  // let userApiResource = userResource.addResource("{userSub}", {
-  //   defaultIntegration: userintegration.userSub,
-  // });
-  userResource.addMethod("GET", integration, {
+  userResource.addMethod("GET", new apigw.LambdaIntegration(integration), {
     authorizer: auth,
     authorizationType: apigw.AuthorizationType.COGNITO,
   });
@@ -23,7 +20,7 @@ const userFoodSubscription_R = (
   api.root
     .addResource("{vId}")
     .addResource("subscription")
-    .addMethod("POST", integration, {
+    .addMethod("POST", new apigw.LambdaIntegration(integration), {
       authorizer: auth,
       authorizationType: apigw.AuthorizationType.COGNITO,
     });

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import "source-map-support/register";
 import * as cdk from "@aws-cdk/core";
 import { WebAppStack } from "../lib/web-app-stack";
 import { ApiStack } from "../lib/api-stack";
@@ -12,6 +11,11 @@ let authStack = new AuthStack(app, "auth", {});
 
 let WebStack = new WebAppStack(app, "web", {});
 
-let APIStack = new ApiStack(app, "api");
+let APIStack = new ApiStack(app, "api", {
+  env: {
+    region: `ap-south-1`,
+    account: `623186676670`,
+  },
+});
 
-let DBStack = new DbStack(app, "db");
+// let DBStack = new DbStack(app, "db");

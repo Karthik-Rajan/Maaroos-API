@@ -1,12 +1,20 @@
 import * as cdk from "@aws-cdk/core";
 import CustomProps from "../utils/CustomProps";
-import { fetchPartnerApi, fetchPartnerDetailApi } from "./integrations/vendor";
-import { fetchUserApi, fetchUserSubscriptionApi } from "./integrations/user";
+import {
+  fetchPartnerLambda,
+  fetchPartnerDetailLambda,
+} from "./integrations/vendor";
+import {
+  fetchUserLambda,
+  fetchUserSubscriptionLambda,
+} from "./integrations/user";
 import { lambdaRole, rootApi } from "./integrations/base";
 import vendor_R from "./routes/vendor";
 import { userProfile_R, userFoodSubscription_R } from "./routes/user";
 import * as Cognito from "@aws-cdk/aws-cognito";
 import * as apigateway from "@aws-cdk/aws-apigateway";
+import * as route53 from "@aws-cdk/aws-route53";
+import * as targets from "@aws-cdk/aws-route53-targets";
 
 export class ApiStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: CustomProps) {
@@ -18,13 +26,13 @@ export class ApiStack extends cdk.Stack {
     let role = lambdaRole(this);
 
     /** API Integrations */
-    let fetchPartner_I = fetchPartnerApi(this, role);
+    let fetchPartner_I = fetchPartnerLambda(this, role);
 
-    let fetchPartnerDetail_I = fetchPartnerDetailApi(this, role);
+    let fetchPartnerDetail_I = fetchPartnerDetailLambda(this, role);
 
-    let fetchUser_I = fetchUserApi(this, role);
+    let fetchUser_I = fetchUserLambda(this, role);
 
-    let fetchUserFoodSubscription_I = fetchUserSubscriptionApi(this, role);
+    let fetchUserFoodSubscription_I = fetchUserSubscriptionLambda(this, role);
 
     /** User Auth Pool */
     const userPool = Cognito.UserPool.fromUserPoolArn(
@@ -33,19 +41,31 @@ export class ApiStack extends cdk.Stack {
       userPoolArn.toString()
     );
 
-    const auth = new apigateway.CognitoUserPoolsAuthorizer(this, "userAuth", {
-      cognitoUserPools: [userPool],
+    /** Routes */
+    const api = rootApi(this);
+
+    const zone = route53.HostedZone.fromLookup(this, "maaroos.com", {
+      domainName: "maaroos.com",
     });
 
-    /** Routes */
-    let api = rootApi(this);
+    const apigw = new targets.ApiGateway(<any>api);
+
+    new route53.ARecord(this, `api.maaroos.com`, {
+      target: route53.RecordTarget.fromAlias(<any>apigw),
+      zone: zone,
+      recordName: `api.maaroos.com`,
+    });
 
     //Vendor
     let vendorIntegrations = {
       list: fetchPartner_I,
-      vId: fetchPartnerDetail_I,
+      detail: fetchPartnerDetail_I,
     };
     vendor_R(api, vendorIntegrations);
+
+    const auth = new apigateway.CognitoUserPoolsAuthorizer(this, "userAuth", {
+      cognitoUserPools: [userPool],
+    });
 
     //User
     userProfile_R(api, fetchUser_I, auth);

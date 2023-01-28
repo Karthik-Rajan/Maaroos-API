@@ -62,5 +62,5 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
       return [];
     });
 
-  return response(200, vendors);
+  return response(200, vendors, body);
 };
