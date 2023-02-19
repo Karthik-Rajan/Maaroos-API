@@ -58,7 +58,6 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
       return records;
     })
     .catch((err) => {
-      console.log(err);
       return [];
     });
 

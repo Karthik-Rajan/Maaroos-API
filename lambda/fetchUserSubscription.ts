@@ -1,8 +1,8 @@
 import { FoodSubscription, Op } from "../models";
 import { response } from "../utils/helper";
+import moment from 'moment';
 
 export const handler = async (event: any, context: any) => {
-  console.log(event);
   const { sub } = event?.requestContext?.authorizer?.claims;
   let { vId }: any = event.pathParameters;
   let body: any = event.body;
@@ -10,46 +10,54 @@ export const handler = async (event: any, context: any) => {
 
   let subscriptionList: any = {};
 
+  let date = {};
+
   let where: any = {
     user_uuid: sub,
     vendor_id: vId,
   };
 
-  if (types) {
+  if (types.length) {
     let typeFilter = {
       [Op.in]: types,
     };
     where = { ...where, types: { ...typeFilter } };
   }
 
-  if (from) {
-    where = {
-      ...where,
-      date: {
-        [Op.and]: {
-          [Op.gte]: from,
-        },
+  if (from && to) {
+    date = {
+      [Op.and]: {
+        [Op.gte]: from,
+        [Op.lte]: to,
       },
-    };
+    }
   }
 
-  if (to) {
+  if (date) {
     where = {
       ...where,
-      date: {
-        [Op.and]: {
-          [Op.lte]: to,
-        },
-      },
-    };
+      date
+    }
   }
-
-  console.log(where);
 
   subscriptionList = await FoodSubscription.findAll({
     // attributes: ["id", "date", "types", "user_uuid", "vendor_id"],
     where,
   });
 
-  return response(200, subscriptionList);
+  const events: any = [];
+
+  if (subscriptionList) {
+    subscriptionList.forEach((element: any) => {
+      const time = element.types === 'BF' ? '09:00:00' : (element.types === 'LN' ? '12:00:00' : '20:00:00')
+      events.push({
+        id: element.id,
+        title: element.types,
+        date: moment(element.date).format('YYYY-MM-DD ' + time),
+        /*end: moment(element.date).add(60, 'minutes').format('YYYY-MM-DD HH:mm:ss'),*/
+      });
+    });
+  }
+
+  return response(200, events);
 };

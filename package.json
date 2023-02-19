@@ -26,7 +26,7 @@
     "@aws-cdk/aws-s3": "^1.171.0",
     "@aws-cdk/aws-s3-deployment": "^1.171.0",
     "aws-lambda": "^1.0.7",
-    "esbuild": "^0.15.7",
+    "moment": "^2.29.4",
     "mysql2": "^2.3.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.25.7",
