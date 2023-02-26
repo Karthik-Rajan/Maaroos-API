@@ -5,12 +5,13 @@ import {
   fetchPartnerDetailLambda,
 } from "./integrations/vendor";
 import {
+  addScheduleLambda,
   fetchUserLambda,
   fetchUserSubscriptionLambda,
 } from "./integrations/user";
 import { lambdaRole, rootApi } from "./integrations/base";
 import vendor_R from "./routes/vendor";
-import { userProfile_R, userFoodSubscription_R } from "./routes/user";
+import { userProfile_R, userFoodSubscription_R, userAddSchedule_R } from "./routes/user";
 import * as Cognito from "@aws-cdk/aws-cognito";
 import * as apigateway from "@aws-cdk/aws-apigateway";
 import * as route53 from "@aws-cdk/aws-route53";
@@ -33,6 +34,8 @@ export class ApiStack extends cdk.Stack {
     let fetchUser_I = fetchUserLambda(this, role);
 
     let fetchUserFoodSubscription_I = fetchUserSubscriptionLambda(this, role);
+
+    let addSchedule_I = addScheduleLambda(this, role);
 
     /** User Auth Pool */
     const userPool = Cognito.UserPool.fromUserPoolArn(
@@ -70,6 +73,8 @@ export class ApiStack extends cdk.Stack {
     //User
     userProfile_R(api, fetchUser_I, auth);
 
-    userFoodSubscription_R(api, fetchUserFoodSubscription_I, auth);
+    const foodSubscriptionRoot = userFoodSubscription_R(api, fetchUserFoodSubscription_I, auth);
+
+    userAddSchedule_R(foodSubscriptionRoot, addSchedule_I, auth)
   }
 }

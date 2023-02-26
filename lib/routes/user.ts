@@ -17,13 +17,29 @@ const userFoodSubscription_R = (
   integration: any,
   auth: apigw.CognitoUserPoolsAuthorizer
 ) => {
-  api.root
+
+  const userSubscriptionRoot = api.root
     .addResource("{vId}")
-    .addResource("subscription")
+    .addResource("subscription");
+
+  userSubscriptionRoot.addMethod("POST", new apigw.LambdaIntegration(integration), {
+    authorizer: auth,
+    authorizationType: apigw.AuthorizationType.COGNITO,
+  });
+  return userSubscriptionRoot;
+};
+
+const userAddSchedule_R = (
+  root: apigw.Resource,
+  integration: any,
+  auth: apigw.CognitoUserPoolsAuthorizer
+) => {
+  root
+    .addResource("add")
     .addMethod("POST", new apigw.LambdaIntegration(integration), {
       authorizer: auth,
       authorizationType: apigw.AuthorizationType.COGNITO,
     });
 };
 
-export { userProfile_R, userFoodSubscription_R };
+export { userProfile_R, userFoodSubscription_R, userAddSchedule_R };

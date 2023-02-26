@@ -22,11 +22,15 @@ const FoodSubscription = sequelize.define(
       },
       allowNull: false,
     },
-    date: {
+    from_date: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    types: {
+    to_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    type: {
       type: DataTypes.STRING,
       allowNull: false,
     },

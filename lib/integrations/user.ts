@@ -14,3 +14,11 @@ export const fetchUserSubscriptionLambda = (
   new lambda.NodejsFunction(self, "fetchUserSubscription", {
     ...lambdaProps(`fetchUserSubscription.ts`, role),
   });
+
+export const addScheduleLambda = (
+  self: any,
+  role: void
+): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "addSchedule", {
+    ...lambdaProps(`addSchedule.ts`, role),
+  });

@@ -10,38 +10,45 @@ export const handler = async (event: any, context: any) => {
 
   let subscriptionList: any = {};
 
-  let date = {};
+  let from_date, to_date = {};
 
   let where: any = {
     user_uuid: sub,
-    vendor_id: vId,
   };
+
+  if (vId && vId != 'all') {
+    where = { ...where, vendor_id: vId }
+  }
 
   if (types.length) {
     let typeFilter = {
       [Op.in]: types,
     };
-    where = { ...where, types: { ...typeFilter } };
+    where = { ...where, type: { ...typeFilter } };
   }
 
   if (from && to) {
-    date = {
+    from_date = {
       [Op.and]: {
         [Op.gte]: from,
+      },
+    }
+    to_date = {
+      [Op.and]: {
         [Op.lte]: to,
       },
     }
   }
 
-  if (date) {
+  if (from_date && to_date) {
     where = {
       ...where,
-      date
+      from_date,
+      to_date
     }
   }
 
   subscriptionList = await FoodSubscription.findAll({
-    // attributes: ["id", "date", "types", "user_uuid", "vendor_id"],
     where,
   });
 
@@ -49,12 +56,11 @@ export const handler = async (event: any, context: any) => {
 
   if (subscriptionList) {
     subscriptionList.forEach((element: any) => {
-      const time = element.types === 'BF' ? '09:00:00' : (element.types === 'LN' ? '12:00:00' : '20:00:00')
+      const time = element.type === 'BF' ? '09:00:00' : (element.type === 'LN' ? '12:00:00' : '20:00:00')
       events.push({
         id: element.id,
-        title: element.types,
-        date: moment(element.date).format('YYYY-MM-DD ' + time),
-        /*end: moment(element.date).add(60, 'minutes').format('YYYY-MM-DD HH:mm:ss'),*/
+        title: element.type,
+        date: moment(element.from_date).format('YYYY-MM-DD ' + time),
       });
     });
   }
