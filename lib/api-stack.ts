@@ -46,17 +46,13 @@ export class ApiStack extends cdk.Stack {
 
     /** Routes */
     const api = rootApi(this);
-
-    const zone = route53.HostedZone.fromLookup(this, "maaroos.com", {
-      domainName: "maaroos.com",
+    new cdk.CfnOutput(this, "restApiName", {
+      value: api.domainName?.domainNameAliasDomainName!,
+      exportName: "restApiName",
     });
-
-    const apigw = new targets.ApiGateway(<any>api);
-
-    new route53.ARecord(this, `api.maaroos.com`, {
-      target: route53.RecordTarget.fromAlias(<any>apigw),
-      zone: zone,
-      recordName: `api.maaroos.com`,
+    new cdk.CfnOutput(this, "restApiZoneId", {
+      value: api.domainName?.domainNameAliasHostedZoneId!,
+      exportName: "restApiZoneId",
     });
 
     //Vendor
@@ -75,6 +71,6 @@ export class ApiStack extends cdk.Stack {
 
     const foodSubscriptionRoot = userFoodSubscription_R(api, fetchUserFoodSubscription_I, auth);
 
-    userAddSchedule_R(foodSubscriptionRoot, addSchedule_I, auth)
+    userAddSchedule_R(foodSubscriptionRoot, addSchedule_I, auth);
   }
 }

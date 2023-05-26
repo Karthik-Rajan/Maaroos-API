@@ -1,9 +1,5 @@
 {
   "acknowledged-issue-numbers": [
     19836
-  ],
-  "hosted-zone:account=623186676670:domainName=maaroos.com:region=ap-south-1": {
-    "Id": "/hostedzone/Z0634925IVMCGJO2C85Y",
-    "Name": "maaroos.com."
-  }
+  ]
 }

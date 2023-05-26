@@ -11,17 +11,22 @@ export const lambdaRole = (self: cdk.Stack) =>
     iam.ManagedPolicy.fromAwsManagedPolicyName("AWSLambdaExecute")
   );
 
-export const rootApi = (self: cdk.Stack) =>
-  new apigw.RestApi(self, "v1", {
+export const rootApi = (self: cdk.Stack) => {
+  const certificate = acm.Certificate.fromCertificateArn(
+    self,
+    `maaroos-cert`,
+    `arn:aws:acm:us-east-1:623186676670:certificate/d3625363-e528-4ae1-addb-ea5dc7b64a19`
+  );
+  const api = new apigw.RestApi(self, "v1", {
     restApiName: "Maaroos Version 1",
     description: "Maaroos API Version 1",
     domainName: {
-      domainName: `api.maaroos.com`,
-      certificate: acm.Certificate.fromCertificateArn(
-        self,
-        `maaroos-cert`,
-        `arn:aws:acm:ap-south-1:623186676670:certificate/378993c8-1623-41b2-a966-7a9c529657cd`
-      ),
+      domainName: `${process.env.DOMAIN_NAME}`,
+      certificate,
+      endpointType: apigw.EndpointType.EDGE
     },
     ...restParams,
   });
+
+  return api;
+}

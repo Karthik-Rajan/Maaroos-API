@@ -9,6 +9,8 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
   limit = limit ? limit : 10;
 
   let haversine = "";
+  let having = null;
+  let order = null;
 
   const where: any = {
     status: "ACTIVE",
@@ -35,6 +37,9 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
     where.is_veg = "YES";
   }
 
+  order = distance ? sequelize.col("distance") : undefined;
+  having = distance ? sequelize.literal(`distance <= ${distance}`) : undefined;
+
   const vendors = await Vendor.findAll({
     attributes: [
       "id",
@@ -50,8 +55,8 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
     ],
 
     where,
-    order: sequelize.col("distance"),
-    having: sequelize.literal(`distance <= ${distance}`),
+    order,
+    having,
     limit,
   })
     .then((records) => {

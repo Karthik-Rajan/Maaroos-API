@@ -11,8 +11,10 @@ export class WebAppStack extends cdk.Stack {
     // S3
     const bucket = new s3.Bucket(this, "web.maaroos.com", {
       publicReadAccess: true,
+      blockPublicAccess : new s3.BlockPublicAccess({blockPublicAcls : false, blockPublicPolicy : false}),
       bucketName: "web.maaroos.com",
       removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
       websiteIndexDocument: "index.html",
       websiteErrorDocument: "index.html",
     });
@@ -24,10 +26,11 @@ export class WebAppStack extends cdk.Stack {
     });
 
     // Cloudfront
-    /*const cf = new cloudfront.CloudFrontWebDistribution(
+    const cf = new cloudfront.CloudFrontWebDistribution(
       this,
       "MaaroosWebDist",
       {
+        viewerProtocolPolicy : cloudfront.ViewerProtocolPolicy.ALLOW_ALL,
         originConfigs: [
           {
             s3OriginSource: {
@@ -36,6 +39,10 @@ export class WebAppStack extends cdk.Stack {
             behaviors: [
               {
                 isDefaultBehavior: true,
+              },
+              {
+                pathPattern : '*',
+                viewerProtocolPolicy : cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
               },
             ],
           },
@@ -48,6 +55,16 @@ export class WebAppStack extends cdk.Stack {
           },
         ],
       }
-    );*/
+    );
+
+    new cdk.CfnOutput(this, "webCFDomain", {
+      value: cf.distributionDomainName,
+      exportName: "webCFDomain",
+    });
+    new cdk.CfnOutput(this, "webCFDistId", {
+      value: cf.distributionId,
+      exportName: "webCFDistId",
+    });
+    
   }
 }

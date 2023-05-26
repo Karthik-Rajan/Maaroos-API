@@ -1,20 +1,34 @@
 #!/usr/bin/env node
 import * as cdk from "@aws-cdk/core";
+import * as dotenv from "dotenv";
 import { WebAppStack } from "../lib/web-app-stack";
 import { ApiStack } from "../lib/api-stack";
 import { AuthStack } from "../lib/auth-stack";
-import { DbStack } from "../lib/db-stack";
-
+import { HostStack } from "../lib/host-stack";
+// import { DbStack } from "../lib/db-stack";
+dotenv.config()
 const app = new cdk.App();
 
 let authStack = new AuthStack(app, "auth", {});
 
-let WebStack = new WebAppStack(app, "web", {});
-
-let APIStack = new ApiStack(app, "api", {
+let webStack = new WebAppStack(app, "web", {
   env: {
-    region: `ap-south-1`,
-    account: `623186676670`,
+    region: process.env.CDK_DEFAULT_REGION,
+    account: process.env.CDK_DEFAULT_ACCOUNT
+  },
+});
+
+let apiStack = new ApiStack(app, "api", {
+  env: {
+    region: process.env.CDK_DEFAULT_REGION,
+    account: process.env.CDK_DEFAULT_ACCOUNT
+  },
+});
+
+let hostStack = new HostStack(app, "host", {
+  env: {
+    region: process.env.CDK_DEFAULT_REGION,
+    account: process.env.CDK_DEFAULT_ACCOUNT
   },
 });
 
