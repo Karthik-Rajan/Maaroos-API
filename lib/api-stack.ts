@@ -8,30 +8,28 @@ import {
   addScheduleLambda,
   fetchUserLambda,
   fetchUserSubscriptionLambda,
+  updateUserLambda,
 } from "./integrations/user";
 import { lambdaRole, rootApi } from "./integrations/base";
 import vendor_R from "./routes/vendor";
-import { userProfile_R, userFoodSubscription_R, userAddSchedule_R } from "./routes/user";
+import { userProfile_R, userFoodSubscription_R, userAddSchedule_R, userProfileUpdate_R } from "./routes/user";
 import * as Cognito from "@aws-cdk/aws-cognito";
 import * as apigateway from "@aws-cdk/aws-apigateway";
-import * as route53 from "@aws-cdk/aws-route53";
-import * as targets from "@aws-cdk/aws-route53-targets";
 
 export class ApiStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: CustomProps) {
     super(scope, id, props);
 
     const userPoolArn = cdk.Fn.importValue("userPool");
-
     /** Roles */
     let role = lambdaRole(this);
 
     /** API Integrations */
     let fetchPartner_I = fetchPartnerLambda(this, role);
-
     let fetchPartnerDetail_I = fetchPartnerDetailLambda(this, role);
 
     let fetchUser_I = fetchUserLambda(this, role);
+    let updateUser_I = updateUserLambda(this, role);
 
     let fetchUserFoodSubscription_I = fetchUserSubscriptionLambda(this, role);
 
@@ -46,14 +44,6 @@ export class ApiStack extends cdk.Stack {
 
     /** Routes */
     const api = rootApi(this);
-    new cdk.CfnOutput(this, "restApiName", {
-      value: api.domainName?.domainNameAliasDomainName!,
-      exportName: "restApiName",
-    });
-    new cdk.CfnOutput(this, "restApiZoneId", {
-      value: api.domainName?.domainNameAliasHostedZoneId!,
-      exportName: "restApiZoneId",
-    });
 
     //Vendor
     let vendorIntegrations = {
@@ -67,10 +57,20 @@ export class ApiStack extends cdk.Stack {
     });
 
     //User
-    userProfile_R(api, fetchUser_I, auth);
+    const userRoot = userProfile_R(api, fetchUser_I, auth);
+    userProfileUpdate_R(userRoot, updateUser_I, auth);
 
     const foodSubscriptionRoot = userFoodSubscription_R(api, fetchUserFoodSubscription_I, auth);
 
     userAddSchedule_R(foodSubscriptionRoot, addSchedule_I, auth);
+
+    new cdk.CfnOutput(this, "restApiName", {
+      value: api.domainName?.domainNameAliasDomainName!,
+      exportName: "restApiName",
+    });
+    new cdk.CfnOutput(this, "restApiZoneId", {
+      value: api.domainName?.domainNameAliasHostedZoneId!,
+      exportName: "restApiZoneId",
+    });
   }
 }

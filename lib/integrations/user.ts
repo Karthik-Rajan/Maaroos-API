@@ -6,6 +6,11 @@ export const fetchUserLambda = (self: any, role: void): lambda.NodejsFunction =>
   new lambda.NodejsFunction(self, "fetchUser", {
     ...lambdaProps(`fetchUser.ts`, role),
   });
+  
+export const updateUserLambda = (self: any, role: void): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "updateUser", {
+    ...lambdaProps(`updateUser.ts`, role),
+  });
 
 export const fetchUserSubscriptionLambda = (
   self: any,

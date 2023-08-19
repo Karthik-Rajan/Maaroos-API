@@ -10,6 +10,18 @@ const userProfile_R = (
     authorizer: auth,
     authorizationType: apigw.AuthorizationType.COGNITO,
   });
+  return userResource;
+};
+
+const userProfileUpdate_R = (
+  root : apigw.Resource,
+  integration: any,
+  auth: apigw.CognitoUserPoolsAuthorizer
+) => {
+  root.addMethod("PUT", new apigw.LambdaIntegration(integration), {
+    authorizer: auth,
+    authorizationType: apigw.AuthorizationType.COGNITO,
+  });
 };
 
 const userFoodSubscription_R = (
@@ -42,4 +54,4 @@ const userAddSchedule_R = (
     });
 };
 
-export { userProfile_R, userFoodSubscription_R, userAddSchedule_R };
+export { userProfile_R, userFoodSubscription_R, userAddSchedule_R, userProfileUpdate_R };

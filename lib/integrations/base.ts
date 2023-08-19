@@ -15,13 +15,13 @@ export const rootApi = (self: cdk.Stack) => {
   const certificate = acm.Certificate.fromCertificateArn(
     self,
     `maaroos-cert`,
-    `arn:aws:acm:us-east-1:623186676670:certificate/d3625363-e528-4ae1-addb-ea5dc7b64a19`
+    process.env.ACM_API_CERTIFICATE_ARN!
   );
   const api = new apigw.RestApi(self, "v1", {
     restApiName: "Maaroos Version 1",
     description: "Maaroos API Version 1",
     domainName: {
-      domainName: `${process.env.DOMAIN_NAME}`,
+      domainName: `api.${process.env.DOMAIN_NAME}`,
       certificate,
       endpointType: apigw.EndpointType.EDGE
     },

@@ -55,11 +55,22 @@ export class AuthStack extends cdk.Stack {
       },
     });
 
-    userPool.addClient("web");
+    const poolClient = userPool.addClient("web");
 
     new cdk.CfnOutput(this, "userPoolArn", {
       value: userPool.userPoolArn,
       exportName: "userPool",
     });
+
+    new cdk.CfnOutput(this, "userPoolId", {
+      value:     userPool.userPoolId,
+      exportName: "userPoolId",
+    });
+
+    new cdk.CfnOutput(this, "userPoolWebClientId", {
+      value: poolClient.userPoolClientId,
+      exportName: "userPoolWebClientId",
+    });
+
   }
 }

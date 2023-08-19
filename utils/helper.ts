@@ -49,6 +49,8 @@ export const restParams: any = {
       "http://localhost:3000",
       "http://web.maaroos.com",
       "https://web.maaroos.com",
+      "https://d3bqu2570uacxq.cloudfront.net",
+      "http://web.maaroos.com.s3.ap-south-1.amazonaws.com"
     ],
   },
 };

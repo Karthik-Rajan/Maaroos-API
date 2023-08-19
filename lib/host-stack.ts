@@ -27,8 +27,8 @@ export class HostStack extends cdk.Stack {
     });
 
     // API
-    const restApiName = cdk.Fn.importValue("restApiName");
-    const restApiZoneId = cdk.Fn.importValue("restApiZoneId");
+   const restApiName = cdk.Fn.importValue("restApiName");
+   const restApiZoneId = cdk.Fn.importValue("restApiZoneId");
 
     const apigw = new targets.ApiGatewayv2DomainProperties(restApiName, restApiZoneId)
 
