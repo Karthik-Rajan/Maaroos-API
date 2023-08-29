@@ -1,52 +1,88 @@
 import * as apigw from "@aws-cdk/aws-apigateway";
 
-const userProfile_R = (
-  api: apigw.RestApi,
+
+export const userRoot = (api: apigw.RestApi) => {
+  return api.root.addResource("me");
+}
+
+export const walletRoot = (api: apigw.Resource) => {
+  return api.addResource('wallet');
+}
+
+export const vendorDetailRoot = (api: apigw.RestApi) => {
+  return api.root
+    .addResource("{vId}");
+}
+
+export const vendorSubscriptionRoot = (resource: apigw.Resource) => {
+  return resource.addResource("subscription");
+}
+
+export const vendorReviewRoot = (resource: apigw.Resource) => {
+  return resource.addResource("review");
+}
+
+export const userProfile_R = (
+  resource: apigw.Resource,
   integration: any,
   auth: apigw.CognitoUserPoolsAuthorizer
 ) => {
-  let userResource = api.root.addResource("me");
-  userResource.addMethod("GET", new apigw.LambdaIntegration(integration), {
+  return resource.addMethod("GET", new apigw.LambdaIntegration(integration), {
     authorizer: auth,
     authorizationType: apigw.AuthorizationType.COGNITO,
   });
-  return userResource;
 };
 
-const userProfileUpdate_R = (
-  root : apigw.Resource,
+export const userProfileUpdate_R = (
+  resource: apigw.Resource,
   integration: any,
   auth: apigw.CognitoUserPoolsAuthorizer
 ) => {
-  root.addMethod("PUT", new apigw.LambdaIntegration(integration), {
+  return resource.addMethod("PUT", new apigw.LambdaIntegration(integration), {
     authorizer: auth,
     authorizationType: apigw.AuthorizationType.COGNITO,
   });
 };
 
-const userFoodSubscription_R = (
-  api: apigw.RestApi,
+export const rz_CreateOrder_R = (
+  resource: apigw.Resource,
   integration: any,
   auth: apigw.CognitoUserPoolsAuthorizer
 ) => {
-
-  const userSubscriptionRoot = api.root
-    .addResource("{vId}")
-    .addResource("subscription");
-
-  userSubscriptionRoot.addMethod("POST", new apigw.LambdaIntegration(integration), {
+  return resource.addMethod("POST", new apigw.LambdaIntegration(integration), {
     authorizer: auth,
     authorizationType: apigw.AuthorizationType.COGNITO,
   });
-  return userSubscriptionRoot;
 };
 
-const userAddSchedule_R = (
-  root: apigw.Resource,
+export const walletRecharge_R = (
+  resource: apigw.Resource,
   integration: any,
   auth: apigw.CognitoUserPoolsAuthorizer
 ) => {
-  root
+  return resource.addResource('recharge').addMethod("POST", new apigw.LambdaIntegration(integration), {
+    authorizer: auth,
+    authorizationType: apigw.AuthorizationType.COGNITO,
+  });
+};
+
+export const userFoodSubscription_R = (
+  resource: apigw.Resource,
+  integration: any,
+  auth: apigw.CognitoUserPoolsAuthorizer
+) => {
+  return resource.addMethod("POST", new apigw.LambdaIntegration(integration), {
+    authorizer: auth,
+    authorizationType: apigw.AuthorizationType.COGNITO,
+  });
+};
+
+export const userAddSchedule_R = (
+  resource: apigw.Resource,
+  integration: any,
+  auth: apigw.CognitoUserPoolsAuthorizer
+) => {
+  resource
     .addResource("add")
     .addMethod("POST", new apigw.LambdaIntegration(integration), {
       authorizer: auth,
@@ -54,4 +90,15 @@ const userAddSchedule_R = (
     });
 };
 
-export { userProfile_R, userFoodSubscription_R, userAddSchedule_R, userProfileUpdate_R };
+export const userAddReview_R = (
+  resource: apigw.Resource,
+  integration: any,
+  auth: apigw.CognitoUserPoolsAuthorizer
+) => {
+  resource
+    .addResource("add")
+    .addMethod("POST", new apigw.LambdaIntegration(integration), {
+      authorizer: auth,
+      authorizationType: apigw.AuthorizationType.COGNITO,
+    });
+}

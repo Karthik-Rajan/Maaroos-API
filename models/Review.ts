@@ -6,26 +6,35 @@ import Vendor from "./Vendor";
 const Review = sequelize.define(
   "reviews",
   {
-    message: {
-      type: DataTypes.STRING,
+    id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      allowNull: false
     },
     rating: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    comment: {
+      type: DataTypes.STRING,
+    },
+    status: {
       type: DataTypes.ENUM,
       defaultValue: "ACTIVE",
       values: ["PENDING", "ACTIVE", "INACTIVE", "DECLINED"],
     },
-    user_id: {
-      type: DataTypes.BIGINT,
+    user_uuid: {
+      type: DataTypes.STRING,
       references: {
-        model: User, // 'Actors' would also work
-        key: "id",
+        model: User,
+        key: "uuid",
       },
       allowNull: false,
     },
     vendor_id: {
       type: DataTypes.BIGINT,
       references: {
-        model: Vendor, // 'Actors' would also work
+        model: Vendor,
         key: "id",
       },
       allowNull: false,
@@ -38,6 +47,7 @@ const Review = sequelize.define(
   }
 );
 
-Review.belongsTo(User, { foreignKey: "user_id" });
+Review.belongsTo(User, { foreignKey: "user_uuid" });
+// Review.belongsTo(Vendor, { foreignKey: "vendor_id" });
 
 export default Review;

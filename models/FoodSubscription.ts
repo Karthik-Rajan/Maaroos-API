@@ -42,7 +42,7 @@ const FoodSubscription = sequelize.define(
   }
 );
 
-FoodSubscription.belongsTo(User, { foreignKey: "user_uuid" });
-FoodSubscription.belongsTo(Vendor, { foreignKey: "vendor_id" });
+// FoodSubscription.belongsTo(User, { foreignKey: "user_uuid" });
+// FoodSubscription.belongsTo(Vendor, { foreignKey: "vendor_id" });
 
 export default FoodSubscription;

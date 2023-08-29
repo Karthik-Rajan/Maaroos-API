@@ -6,10 +6,20 @@ export const fetchUserLambda = (self: any, role: void): lambda.NodejsFunction =>
   new lambda.NodejsFunction(self, "fetchUser", {
     ...lambdaProps(`fetchUser.ts`, role),
   });
-  
+
 export const updateUserLambda = (self: any, role: void): lambda.NodejsFunction =>
   new lambda.NodejsFunction(self, "updateUser", {
     ...lambdaProps(`updateUser.ts`, role),
+  });
+
+export const rz_createOrderLambda = (self: any, role: void): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "rz_CreateOrder", {
+    ...lambdaProps(`rz_CreateOrder.ts`, role),
+  });
+
+export const walletRechargeLambda = (self: any, role: void): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "walletRecharge", {
+    ...lambdaProps(`walletRecharge.ts`, role),
   });
 
 export const fetchUserSubscriptionLambda = (
@@ -27,3 +37,19 @@ export const addScheduleLambda = (
   new lambda.NodejsFunction(self, "addSchedule", {
     ...lambdaProps(`addSchedule.ts`, role),
   });
+
+export const addReviewLambda = (
+  self: any,
+  role: void
+): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "addReview", {
+    ...lambdaProps(`addReview.ts`, role),
+  })
+
+export const fetchReviewLambda = (
+  self: any,
+  role: void
+): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "fetchReview", {
+    ...lambdaProps(`fetchReview.ts`, role),
+  })

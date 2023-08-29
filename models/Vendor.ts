@@ -1,10 +1,16 @@
 import { Sequelize, DataTypes } from "sequelize";
 import { sequelize } from "../utils/DbConnection";
 import Review from "./Review";
+import FoodSubscription from "./FoodSubscription";
 
 const Vendor = sequelize.define(
   "vendors",
   {
+    id: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -66,4 +72,5 @@ const Vendor = sequelize.define(
 );
 
 Vendor.hasMany(Review, { foreignKey: "vendor_id" });
+// Vendor.hasMany(FoodSubscription, { foreignKey: "vendor_id" });
 export default Vendor;

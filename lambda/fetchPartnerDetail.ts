@@ -2,8 +2,18 @@ import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { Vendor, Review, User } from "../models";
 import { response } from "../utils/helper";
 
-export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
+export const handler = async (event: any, context: any) => {
   let { vId }: any = event.pathParameters;
+  const sub = event?.requestContext?.authorizer?.claims.sub;
+  let reviewWhere, userwhere = {};
+  if (sub) {
+    reviewWhere = {
+      user_uuid: sub,
+    }
+    userwhere = {
+      uuid: sub
+    }
+  }
 
   const vendorDetail = await Vendor.findOne({
     attributes: [
@@ -23,22 +33,24 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
         model: Review,
         attributes: [
           "id",
-          "message",
-          "user_id",
+          "comment",
+          "user_uuid",
           "vendor_id",
           "rating",
           "created_at",
         ],
+        where: reviewWhere,
         include: [
           {
             model: User,
             attributes: [
-              "id",
+              "uuid",
               "first_name",
               "second_name",
               "profile_img",
               "created_at",
             ],
+            where: userwhere
           },
         ],
       },
@@ -48,6 +60,7 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any) => {
       return records;
     })
     .catch((err) => {
+      console.log('error', err);
       return [];
     });
 

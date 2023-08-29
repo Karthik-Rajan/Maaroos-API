@@ -10,7 +10,7 @@ export const response = (code: number, result: any, hash: object = {}) => {
 
   return {
     statusCode: code,
-    body: JSON.stringify(result ? result : {}),
+    body: JSON.stringify(result ? result : {'status' : 'ok'}),
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
