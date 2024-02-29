@@ -17,7 +17,8 @@ export class HostStack extends cdk.Stack {
     const webCFDomain = cdk.Fn.importValue("webCFDomain");
     const webCFDistId = cdk.Fn.importValue("webCFDistId");
     // const webBucket = s3.Bucket.fromBucketArn(this, `web-maaroos-bucket`, webBucketArn);
-    const targetCf = cloudfront.Distribution.fromDistributionAttributes(this, `web-cf-dist`, { domainName : webCFDomain , distributionId : webCFDistId})
+
+    const targetCf = cloudfront.Distribution.fromDistributionAttributes(this, `web-cf-dist`, { domainName: webCFDomain, distributionId: webCFDistId })
     const targetWeb = new targets.CloudFrontTarget(targetCf);
 
     new route53.ARecord(this, `web@${process.env.DOMAIN_NAME}`, {
@@ -27,8 +28,8 @@ export class HostStack extends cdk.Stack {
     });
 
     // API
-   const restApiName = cdk.Fn.importValue("restApiName");
-   const restApiZoneId = cdk.Fn.importValue("restApiZoneId");
+    const restApiName = cdk.Fn.importValue("restApiName");
+    const restApiZoneId = cdk.Fn.importValue("restApiZoneId");
 
     const apigw = new targets.ApiGatewayv2DomainProperties(restApiName, restApiZoneId)
 

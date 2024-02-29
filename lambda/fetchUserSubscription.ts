@@ -1,6 +1,6 @@
 import { FoodSubscription, Op } from "../models";
 import { response } from "../utils/helper";
-import moment from 'moment';
+import moment = require('moment');
 
 export const handler = async (event: any, context: any) => {
   const { sub } = event?.requestContext?.authorizer?.claims;
@@ -48,22 +48,27 @@ export const handler = async (event: any, context: any) => {
     }
   }
 
-  subscriptionList = await FoodSubscription.findAll({
+  let events: { [key: string]: any[] } = {};
+
+  await FoodSubscription.findAll({
     where,
-  });
-
-  const events: any = [];
-
-  if (subscriptionList) {
-    subscriptionList.forEach((element: any) => {
-      const time = element.type === 'BF' ? '09:00:00' : (element.type === 'LN' ? '12:00:00' : '20:00:00')
-      events.push({
-        id: element.id,
-        title: element.type,
-        date: moment(element.from_date).format('YYYY-MM-DD ' + time),
-      });
-    });
-  }
-
-  return response(200, events);
+  })
+    .then((subscriptionList) => {
+      if (subscriptionList) {
+        subscriptionList.forEach((element: any) => {
+          if (!(element.identifier in events)) {
+            events[element.identifier] = [];
+          }
+          const time = element.type === 'BF' ? '09:00:00' : (element.type === 'LN' ? '12:00:00' : '20:00:00')
+          const endTime = element.type === 'BF' ? '09:30:00' : (element.type === 'LN' ? '12:30:00' : '20:30:00')
+          events[element.identifier].push({
+            title: element.type,
+            start: moment(element.from_date).format('YYYY-MM-DD ' + time),
+            end: moment(element.to_date).format('YYYY-MM-DD ' + endTime),
+            allDay: false
+          })
+        });
+      }
+    })
+  return await response(200, events);
 };

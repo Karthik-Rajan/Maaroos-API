@@ -60,10 +60,32 @@ export const walletRecharge_R = (
   integration: any,
   auth: apigw.CognitoUserPoolsAuthorizer
 ) => {
-  return resource.addResource('recharge').addMethod("POST", new apigw.LambdaIntegration(integration), {
-    authorizer: auth,
-    authorizationType: apigw.AuthorizationType.COGNITO,
-  });
+  return resource.addResource('recharge')
+    .addMethod("POST", new apigw.LambdaIntegration(integration), {
+      authorizer: auth,
+      authorizationType: apigw.AuthorizationType.COGNITO,
+    });
+};
+
+export const walletStatement_R = (
+  resource: apigw.Resource,
+  integration: any,
+  auth: apigw.CognitoUserPoolsAuthorizer
+) => {
+  return resource.addResource('statements')
+    .addMethod("GET", new apigw.LambdaIntegration(integration), {
+      authorizer: auth,
+      authorizationType: apigw.AuthorizationType.COGNITO,
+    });
+}
+
+export const paymentCallback_R = (api: apigw.RestApi, integration: any) => {
+  api.root.addResource("payment")
+    .addResource("callback")
+    .addMethod(
+      "POST",
+      new apigw.LambdaIntegration(integration)
+    );
 };
 
 export const userFoodSubscription_R = (

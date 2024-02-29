@@ -18,6 +18,7 @@ export const handler = async (event: any, context: any) => {
                 ],
             },
         ],
+        order: [['id', 'DESC']]
     })
         .then((records) => {
             return records;

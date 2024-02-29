@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes } from "sequelize";
+import { DataTypes } from "sequelize";
 import { sequelize } from "../utils/DbConnection";
 import User from "./User";
 import Vendor from "./Vendor";
@@ -6,11 +6,6 @@ import Vendor from "./Vendor";
 const Review = sequelize.define(
   "reviews",
   {
-    id: {
-      type: DataTypes.BIGINT,
-      primaryKey: true,
-      allowNull: false
-    },
     rating: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -48,6 +43,6 @@ const Review = sequelize.define(
 );
 
 Review.belongsTo(User, { foreignKey: "user_uuid" });
-// Review.belongsTo(Vendor, { foreignKey: "vendor_id" });
+Review.belongsTo(Vendor, { foreignKey: "vendor_id", constraints: false });
 
 export default Review;

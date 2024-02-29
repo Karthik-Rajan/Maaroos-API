@@ -12,11 +12,13 @@ import {
   addReviewLambda,
   fetchReviewLambda,
   rz_createOrderLambda,
-  walletRechargeLambda
+  walletRechargeLambda,
+  walletStatementLambda,
+  paymentCallbackLambda
 } from "./integrations/user";
 import { lambdaRole, rootApi } from "./integrations/base";
 import { vendorDetail_R, vendorList_R, vendorReview_R, vendorRoot } from "./routes/vendor";
-import { userProfile_R, userFoodSubscription_R, userAddSchedule_R, userProfileUpdate_R, vendorSubscriptionRoot, vendorDetailRoot, userRoot, userAddReview_R, vendorReviewRoot, rz_CreateOrder_R, walletRoot, walletRecharge_R } from "./routes/user";
+import { userProfile_R, userFoodSubscription_R, userAddSchedule_R, userProfileUpdate_R, vendorSubscriptionRoot, vendorDetailRoot, userRoot, userAddReview_R, vendorReviewRoot, rz_CreateOrder_R, walletRoot, walletRecharge_R, walletStatement_R, paymentCallback_R } from "./routes/user";
 import * as Cognito from "@aws-cdk/aws-cognito";
 import * as apigateway from "@aws-cdk/aws-apigateway";
 
@@ -36,6 +38,8 @@ export class ApiStack extends cdk.Stack {
     let updateUser_I = updateUserLambda(this, role);
     let rz_CreateOrder_I = rz_createOrderLambda(this, role)
     let walletRecharge_I = walletRechargeLambda(this, role)
+    let walletStatement_I = walletStatementLambda(this, role)
+    let paymentCallback_I = paymentCallbackLambda(this, role)
 
     let fetchUserFoodSubscription_I = fetchUserSubscriptionLambda(this, role);
 
@@ -55,6 +59,7 @@ export class ApiStack extends cdk.Stack {
 
     /** Routes */
     const api = rootApi(this);
+
     // Root APIs
     const user_API = userRoot(api);
     const wallet_API = walletRoot(user_API);
@@ -73,10 +78,12 @@ export class ApiStack extends cdk.Stack {
     userProfileUpdate_R(user_API, updateUser_I, auth);
     rz_CreateOrder_R(wallet_API, rz_CreateOrder_I, auth);
     walletRecharge_R(wallet_API, walletRecharge_I, auth)
+    walletStatement_R(wallet_API, walletStatement_I, auth)
+    paymentCallback_R(api, paymentCallback_I)
 
     //User + Vendor
     userFoodSubscription_R(vendorSubscription_API, fetchUserFoodSubscription_I, auth);
-    userAddSchedule_R(vendorDetail_API, addSchedule_I, auth);
+    userAddSchedule_R(vendorSubscription_API, addSchedule_I, auth);
     userAddReview_R(vendorReview_API, addReview_I, auth);
 
     new cdk.CfnOutput(this, "restApiName", {

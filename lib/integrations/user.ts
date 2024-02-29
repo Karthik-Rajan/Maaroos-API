@@ -22,6 +22,16 @@ export const walletRechargeLambda = (self: any, role: void): lambda.NodejsFuncti
     ...lambdaProps(`walletRecharge.ts`, role),
   });
 
+export const walletStatementLambda = (self: any, role: void): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "fetchStatement", {
+    ...lambdaProps(`fetchStatement.ts`, role),
+  });
+
+export const paymentCallbackLambda = (self: any, role: void): lambda.NodejsFunction =>
+  new lambda.NodejsFunction(self, "paymentCallback", {
+    ...lambdaProps(`paymentCallback.ts`, role),
+  });
+
 export const fetchUserSubscriptionLambda = (
   self: any,
   role: void

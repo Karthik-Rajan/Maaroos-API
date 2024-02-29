@@ -1,7 +1,5 @@
 import { Sequelize, DataTypes } from "sequelize";
 import { sequelize } from "../utils/DbConnection";
-import Review from "./Review";
-import FoodSubscription from "./FoodSubscription";
 
 const Vendor = sequelize.define(
   "vendors",
@@ -16,6 +14,18 @@ const Vendor = sequelize.define(
       allowNull: false,
     },
     postcode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    mobile: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    tags: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -71,6 +81,6 @@ const Vendor = sequelize.define(
   }
 );
 
-Vendor.hasMany(Review, { foreignKey: "vendor_id" });
-// Vendor.hasMany(FoodSubscription, { foreignKey: "vendor_id" });
+// Vendor.hasMany(Review);
+
 export default Vendor;

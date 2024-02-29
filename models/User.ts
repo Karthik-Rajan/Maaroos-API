@@ -1,7 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../utils/DbConnection";
-import Review from "./Review";
-import FoodSubscription from "./FoodSubscription";
 
 const User = sequelize.define(
   "users",
@@ -42,6 +40,10 @@ const User = sequelize.define(
       defaultValue: "ACTIVE",
       values: ["PENDING", "ACTIVE", "INACTIVE", "DECLINED"],
     },
+    wallet_balance: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.0
+    }
   },
   {
     timestamps: true,
@@ -50,5 +52,4 @@ const User = sequelize.define(
   }
 );
 
-// User.hasMany(Review, { foreignKey: "user_uuid" });
 export default User;

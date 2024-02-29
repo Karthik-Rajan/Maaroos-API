@@ -1,22 +1,17 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../utils/DbConnection";
 import User from "./User";
-import Vendor from "./Vendor";
 
 const WalletRecharge = sequelize.define(
     "wallet_recharges",
     {
-        id: {
-            type: DataTypes.BIGINT,
-            primaryKey: true
-        },
-        customer_id: {
-            type: DataTypes.BIGINT,
+        customer_uuid: {
+            type: DataTypes.STRING,
             references: {
                 model: User,
-                key: "id",
+                key: "uuid",
             },
-            allowNull: false,
+            allowNull: false
         },
         customer_email: {
             type: DataTypes.STRING,

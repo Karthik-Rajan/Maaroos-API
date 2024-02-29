@@ -1,3 +1,4 @@
+import moment = require("moment");
 import { FoodSubscription, Op } from "../models";
 import { response } from "../utils/helper";
 
@@ -8,9 +9,11 @@ export const handler = async (event: any, context: any) => {
     let { foodTypes, fromDate, toDate } = JSON.parse(body);
 
     if (fromDate && toDate && foodTypes) {
+        let identifier = moment().toDate().getTime().toString()
         let schedules: any = [];
         foodTypes.forEach((type: string) => {
             schedules.push({
+                identifier,
                 user_uuid: sub,
                 vendor_id: vId,
                 from_date: fromDate,

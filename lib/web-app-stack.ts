@@ -12,12 +12,37 @@ export class WebAppStack extends cdk.Stack {
     // S3
     const bucket = new s3.Bucket(this, `web.${process.env.DOMAIN_NAME}`, {
       publicReadAccess: true,
-      blockPublicAccess : new s3.BlockPublicAccess({blockPublicAcls : false, blockPublicPolicy : false}),
+      blockPublicAccess: new s3.BlockPublicAccess({ blockPublicAcls: false, blockPublicPolicy: false }),
       bucketName: `web.${process.env.DOMAIN_NAME}`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
       websiteIndexDocument: "index.html",
       websiteErrorDocument: "index.html",
+    });
+
+    new s3.Bucket(this, `maaroos-assets`, {
+      publicReadAccess: true,
+      blockPublicAccess: new s3.BlockPublicAccess({ blockPublicAcls: false, blockPublicPolicy: false }),
+      bucketName: `maaroos-assets`,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+      cors: [
+        {
+          allowedHeaders: [
+            "*"
+          ],
+          allowedMethods: [
+            s3.HttpMethods.GET,
+            s3.HttpMethods.POST,
+            s3.HttpMethods.PUT,
+            s3.HttpMethods.DELETE,
+          ],
+          allowedOrigins: [
+            "*"
+          ],
+          exposedHeaders: []
+        }
+      ]
     });
 
     // Deployment
@@ -38,8 +63,8 @@ export class WebAppStack extends cdk.Stack {
       this,
       "MaaroosWebDist",
       {
-        aliasConfiguration : { acmCertRef : process.env.ACM_WEB_CERTIFICATE_ARN!, names: [ `web.${process.env.DOMAIN_NAME}` ]},
-        viewerProtocolPolicy : cloudfront.ViewerProtocolPolicy.ALLOW_ALL,
+        aliasConfiguration: { acmCertRef: process.env.ACM_WEB_CERTIFICATE_ARN!, names: [`web.${process.env.DOMAIN_NAME}`] },
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.ALLOW_ALL,
         originConfigs: [
           {
             s3OriginSource: {
@@ -50,8 +75,8 @@ export class WebAppStack extends cdk.Stack {
                 isDefaultBehavior: true,
               },
               {
-                pathPattern : '*',
-                viewerProtocolPolicy : cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
+                pathPattern: '*',
+                viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
               },
             ],
           },
@@ -84,6 +109,6 @@ export class WebAppStack extends cdk.Stack {
       value: cf.distributionId,
       exportName: "webCFDistId",
     });
-    
+
   }
 }
