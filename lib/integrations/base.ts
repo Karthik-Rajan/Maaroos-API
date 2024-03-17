@@ -1,17 +1,14 @@
-import * as cdk from "@aws-cdk/core";
-import * as acm from "@aws-cdk/aws-certificatemanager";
-import * as apigw from "@aws-cdk/aws-apigateway";
-import * as iam from "@aws-cdk/aws-iam";
+import { Stack, aws_apigateway as apigw, aws_iam as iam, aws_certificatemanager as acm } from "aws-cdk-lib";
 import { restParams } from "../../utils/helper";
 
-export const lambdaRole = (self: cdk.Stack) =>
+export const lambdaRole = (self: Stack) =>
   new iam.Role(self, "lambdaRole", {
     assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
   }).addManagedPolicy(
     iam.ManagedPolicy.fromAwsManagedPolicyName("AWSLambdaExecute")
   );
 
-export const rootApi = (self: cdk.Stack) => {
+export const rootApi = (self: Stack) => {
   const certificate = acm.Certificate.fromCertificateArn(
     self,
     `maaroos-cert`,

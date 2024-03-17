@@ -1,4 +1,4 @@
-import * as cdk from "@aws-cdk/core";
+import { Stack, App, CfnOutput, aws_cognito as cognito } from "aws-cdk-lib";
 import CustomProps from "../utils/CustomProps";
 import {
   postSignUpConfirmation,
@@ -6,11 +6,10 @@ import {
   defineAuthChallenge,
   verifyAuthChallenge,
 } from "./integrations/auth";
-import * as cognito from "@aws-cdk/aws-cognito";
 import { lambdaRole } from "./integrations/base";
 
-export class AuthStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props?: CustomProps) {
+export class AuthStack extends Stack {
+  constructor(scope: App, id: string, props?: CustomProps) {
     super(scope, id, props);
 
     /** Roles */
@@ -57,17 +56,17 @@ export class AuthStack extends cdk.Stack {
 
     const poolClient = userPool.addClient("web");
 
-    new cdk.CfnOutput(this, "userPoolArn", {
+    new CfnOutput(this, "userPoolArn", {
       value: userPool.userPoolArn,
       exportName: "userPool",
     });
 
-    new cdk.CfnOutput(this, "userPoolId", {
-      value:     userPool.userPoolId,
+    new CfnOutput(this, "userPoolId", {
+      value: userPool.userPoolId,
       exportName: "userPoolId",
     });
 
-    new cdk.CfnOutput(this, "userPoolWebClientId", {
+    new CfnOutput(this, "userPoolWebClientId", {
       value: poolClient.userPoolClientId,
       exportName: "userPoolWebClientId",
     });

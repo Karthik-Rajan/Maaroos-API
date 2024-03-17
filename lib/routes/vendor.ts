@@ -1,4 +1,4 @@
-import * as apigw from "@aws-cdk/aws-apigateway";
+import { aws_apigateway as apigw } from "aws-cdk-lib";
 
 const vendorRoot = (api: apigw.RestApi) => api.root.addResource("vendor");
 

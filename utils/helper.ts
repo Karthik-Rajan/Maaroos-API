@@ -10,7 +10,7 @@ export const response = (code: number, result: any, hash: object = {}) => {
 
   return {
     statusCode: code,
-    body: JSON.stringify(result ? result : {'status' : 'ok'}),
+    body: JSON.stringify(result ? result : { 'status': 'ok' }),
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export const restParams: any = {
 
 export const lambdaFuncProps: any = (lambda: any, role: any) => {
   return {
-    runtime: lambda.Runtime.NODEJS_14_X,
+    runtime: 'nodejs20.x', //lambda.Runtime.NODEJS_16_X,
     code: lambda.Code.fromAsset("lambda/build"),
     role,
   };

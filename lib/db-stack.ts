@@ -1,13 +1,10 @@
-import * as cdk from "@aws-cdk/core";
-import * as lambda from "@aws-cdk/aws-lambda";
+import { Stack, App, aws_rds as rds, aws_lambda as lambda, aws_ec2 as ec2 } from "aws-cdk-lib"
 import CustomeProps from "../utils/CustomProps";
-import * as rds from "@aws-cdk/aws-rds";
-import * as ec2 from "@aws-cdk/aws-ec2";
 
-export class DbStack extends cdk.Stack {
+export class DbStack extends Stack {
   public dbConnectionLambda: lambda.Function;
 
-  constructor(scope: cdk.App, id: string, props?: CustomeProps) {
+  constructor(scope: App, id: string, props?: CustomeProps) {
     super(scope, id, props);
 
     // const vpc = new ec2.Vpc(this, "maaroos-db-vpc", {
@@ -26,7 +23,7 @@ export class DbStack extends cdk.Stack {
     //   }),
     //   storageType: rds.StorageType.GP2,
     //   credentials: rds.Credentials.fromUsername("admin", {
-    //     password: cdk.SecretValue.unsafePlainText("630561Svg"),
+    //     password: SecretValue.unsafePlainText("630561Svg"),
     //   }),
     //   instanceType: ec2.InstanceType.of(
     //     //Free Tire
@@ -38,9 +35,9 @@ export class DbStack extends cdk.Stack {
     //   allocatedStorage: 20,
     //   allowMajorVersionUpgrade: false,
     //   autoMinorVersionUpgrade: true,
-    //   backupRetention: cdk.Duration.days(0),
+    //   backupRetention: Duration.days(0),
     //   deleteAutomatedBackups: true,
-    //   removalPolicy: cdk.RemovalPolicy.DESTROY,
+    //   removalPolicy: RemovalPolicy.DESTROY,
     //   deletionProtection: false,
     //   databaseName: "maaroos",
     //   publiclyAccessible: true,
@@ -48,7 +45,7 @@ export class DbStack extends cdk.Stack {
 
     // dbInstance.connections.allowFrom(ec2Instance, ec2.Port.tcp(5432));
 
-    // new cdk.CfnOutput(this, "dbEndpoint", {
+    // new CfnOutput(this, "dbEndpoint", {
     //   value: dbInstance.instanceEndpoint.hostname,
     // });
   }

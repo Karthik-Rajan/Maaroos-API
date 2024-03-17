@@ -1,4 +1,11 @@
-import * as cdk from "@aws-cdk/core";
+import {
+  Stack,
+  App,
+  Fn,
+  CfnOutput,
+  aws_cognito as Cognito,
+  aws_apigateway as apigateway,
+} from 'aws-cdk-lib';
 import CustomProps from "../utils/CustomProps";
 import {
   fetchPartnerLambda,
@@ -19,14 +26,12 @@ import {
 import { lambdaRole, rootApi } from "./integrations/base";
 import { vendorDetail_R, vendorList_R, vendorReview_R, vendorRoot } from "./routes/vendor";
 import { userProfile_R, userFoodSubscription_R, userAddSchedule_R, userProfileUpdate_R, vendorSubscriptionRoot, vendorDetailRoot, userRoot, userAddReview_R, vendorReviewRoot, rz_CreateOrder_R, walletRoot, walletRecharge_R, walletStatement_R, paymentCallback_R } from "./routes/user";
-import * as Cognito from "@aws-cdk/aws-cognito";
-import * as apigateway from "@aws-cdk/aws-apigateway";
 
-export class ApiStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props?: CustomProps) {
+export class ApiStack extends Stack {
+  constructor(scope: App, id: string, props?: CustomProps) {
     super(scope, id, props);
 
-    const userPoolArn = cdk.Fn.importValue("userPool");
+    const userPoolArn = Fn.importValue("userPool");
     /** Roles */
     let role = lambdaRole(this);
 
@@ -86,11 +91,11 @@ export class ApiStack extends cdk.Stack {
     userAddSchedule_R(vendorSubscription_API, addSchedule_I, auth);
     userAddReview_R(vendorReview_API, addReview_I, auth);
 
-    new cdk.CfnOutput(this, "restApiName", {
+    new CfnOutput(this, "restApiName", {
       value: api.domainName?.domainNameAliasDomainName!,
       exportName: "restApiName",
     });
-    new cdk.CfnOutput(this, "restApiZoneId", {
+    new CfnOutput(this, "restApiZoneId", {
       value: api.domainName?.domainNameAliasHostedZoneId!,
       exportName: "restApiZoneId",
     });

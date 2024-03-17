@@ -1,4 +1,4 @@
-import * as lambda from "@aws-cdk/aws-lambda-nodejs";
+import { aws_lambda_nodejs as lambda } from "aws-cdk-lib";
 import { lambdaProps } from "../../utils/helper";
 
 /** User */

@@ -1,5 +1,4 @@
-import * as cdk from "@aws-cdk/core";
-
+import * as cdk from "aws-cdk-lib";
 interface CustomProps extends cdk.StackProps {
   stage?: string;
   lambda?: any;

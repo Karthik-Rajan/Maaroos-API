@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import * as cdk from "@aws-cdk/core";
+import { App } from "aws-cdk-lib";
 import * as dotenv from "dotenv";
 import { WebAppStack } from "../lib/web-app-stack";
 import { ApiStack } from "../lib/api-stack";
@@ -7,7 +7,7 @@ import { AuthStack } from "../lib/auth-stack";
 import { HostStack } from "../lib/host-stack";
 // import { DbStack } from "../lib/db-stack";
 dotenv.config()
-const app = new cdk.App();
+const app = new App();
 
 let authStack = new AuthStack(app, "auth", {});
 

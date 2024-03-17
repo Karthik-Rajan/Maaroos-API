@@ -1,4 +1,4 @@
-import * as apigw from "@aws-cdk/aws-apigateway";
+import { aws_apigateway as apigw } from "aws-cdk-lib";
 
 
 export const userRoot = (api: apigw.RestApi) => {

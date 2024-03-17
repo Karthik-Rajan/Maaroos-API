@@ -1,9 +1,8 @@
-import * as cdk from "@aws-cdk/core";
-import * as lambda from "@aws-cdk/aws-lambda";
+import { Stack, aws_lambda as lambda } from "aws-cdk-lib";
 import { lambdaFuncProps } from "../../utils/helper";
 
 export const postSignUpConfirmation = (
-  self: cdk.Stack,
+  self: Stack,
   role: void
 ): lambda.Function =>
   new lambda.Function(self, "postSignUpConfirmation", {
@@ -12,7 +11,7 @@ export const postSignUpConfirmation = (
   });
 
 export const createAuthChallenge = (
-  self: cdk.Stack,
+  self: Stack,
   role: void
 ): lambda.Function =>
   new lambda.Function(self, "createAuth", {
@@ -21,7 +20,7 @@ export const createAuthChallenge = (
   });
 
 export const defineAuthChallenge = (
-  self: cdk.Stack,
+  self: Stack,
   role: void
 ): lambda.Function =>
   new lambda.Function(self, "defineAuth", {
@@ -30,7 +29,7 @@ export const defineAuthChallenge = (
   });
 
 export const verifyAuthChallenge = (
-  self: cdk.Stack,
+  self: Stack,
   role: void
 ): lambda.Function =>
   new lambda.Function(self, "verifyAuth", {

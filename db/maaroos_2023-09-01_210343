@@ -1,0 +1,163 @@
+-- MySQL dump 10.13  Distrib 8.0.34, for Linux (x86_64)
+--
+-- Host: maaroos.cgt0qxogizav.ap-south-1.rds.amazonaws.com    Database: maaroos
+-- ------------------------------------------------------
+-- Server version	8.0.30
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
+SET @@SESSION.SQL_LOG_BIN= 0;
+
+--
+-- GTID state at the beginning of the backup 
+--
+
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '';
+
+--
+-- Table structure for table `food_subscriptions`
+--
+
+DROP TABLE IF EXISTS `food_subscriptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `food_subscriptions` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `from_date` date NOT NULL,
+  `to_date` date DEFAULT NULL,
+  `vendor_id` bigint NOT NULL,
+  `user_uuid` varchar(100) NOT NULL,
+  `type` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'BF, LN, DN, SN',
+  `created_at` timestamp(6) NULL DEFAULT NULL,
+  `created_by` varchar(45) DEFAULT NULL,
+  `updated_at` timestamp(6) NULL DEFAULT NULL,
+  `updated_by` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `reviews`
+--
+
+DROP TABLE IF EXISTS `reviews`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reviews` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `rating` tinyint NOT NULL,
+  `status` enum('PENDING','ACTIVE','INACTIVE','DECLINED') DEFAULT 'ACTIVE',
+  `user_uuid` varchar(100) NOT NULL,
+  `vendor_id` bigint NOT NULL,
+  `created_at` timestamp(6) NULL DEFAULT NULL,
+  `created_by` varchar(45) DEFAULT NULL,
+  `updated_at` timestamp(6) NULL DEFAULT NULL,
+  `updated_by` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(100) NOT NULL,
+  `second_name` varchar(100) NOT NULL,
+  `uuid` varchar(100) NOT NULL,
+  `mobile` varchar(100) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `profile_img` varchar(100) DEFAULT NULL,
+  `status` enum('PENDING','ACTIVE','INACTIVE','DECLINED') DEFAULT 'ACTIVE',
+  `created_at` timestamp(6) NULL DEFAULT NULL,
+  `created_by` varchar(45) DEFAULT NULL,
+  `updated_at` timestamp(6) NULL DEFAULT NULL,
+  `updated_by` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid_UNIQUE` (`uuid`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `vendors`
+--
+
+DROP TABLE IF EXISTS `vendors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vendors` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `postcode` varchar(45) NOT NULL,
+  `lat` float NOT NULL DEFAULT '0',
+  `lng` float NOT NULL DEFAULT '0',
+  `address` varchar(100) DEFAULT NULL,
+  `status` enum('PENDING','IN-PROGRESS','ACTIVE','INACTIVE','DECLINED','ONHOLD') NOT NULL DEFAULT 'PENDING',
+  `is_veg` enum('YES','NO') DEFAULT 'NO',
+  `is_promoted` enum('YES','NO') DEFAULT 'NO',
+  `logo_url` varchar(255) DEFAULT NULL,
+  `rating_count` int NOT NULL DEFAULT '0',
+  `rating_avg` float NOT NULL DEFAULT '0',
+  `created_by` varchar(45) NOT NULL,
+  `created_at` timestamp(6) NULL DEFAULT NULL,
+  `updated_at` timestamp(6) NULL DEFAULT NULL,
+  `updated_by` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wallet_recharges`
+--
+
+DROP TABLE IF EXISTS `wallet_recharges`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `wallet_recharges` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `customer_id` bigint NOT NULL,
+  `customer_email` varchar(100) DEFAULT NULL,
+  `customer_mobile` varchar(50) NOT NULL,
+  `amount` varchar(45) NOT NULL,
+  `medium_payment_id` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `medium_order_id` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `status` enum('INITIATED','IN-PROGRESS','ACTIVE','INACTIVE','DECLINED','ONHOLD') NOT NULL DEFAULT 'INITIATED',
+  `mode` enum('CREDIT','DEBIT') NOT NULL DEFAULT 'CREDIT',
+  `medium` enum('RAZOR') NOT NULL DEFAULT 'RAZOR',
+  `created_by` varchar(45) NOT NULL,
+  `created_at` timestamp(6) NULL DEFAULT NULL,
+  `updated_at` timestamp(6) NULL DEFAULT NULL,
+  `updated_by` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping routines for database 'maaroos'
+--
+SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-09-01 21:03:56
